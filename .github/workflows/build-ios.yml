@@ -1,0 +1,76 @@
+name: Build iOS (.ipa sem assinatura)
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+jobs:
+  ios:
+    name: Gerar IPA
+    # iOS só compila em máquinas macOS. Para publicar na App Store,
+    # é preciso certificado + provisioning profile da sua conta de desenvolvedor.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Criar projeto iOS (Capacitor)
+        run: |
+          npx cap add ios
+          npx cap sync ios
+
+      - name: Aplicar ícones
+        run: node scripts/native-icons.cjs
+
+      - name: Instalar pods
+        working-directory: ios/App
+        run: |
+          pod install --repo-update || pod install
+
+      - name: Compilar (sem assinatura)
+        working-directory: ios/App
+        run: |
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build
+
+      - name: Empacotar .ipa
+        run: |
+          set -e
+          APP=$(find ios/App/build -name 'App.app' -maxdepth 6 -type d | head -n 1)
+          echo "App encontrado em: $APP"
+          mkdir -p Payload
+          cp -R "$APP" Payload/
+          zip -qry NationZero-unsigned.ipa Payload
+          ls -la NationZero-unsigned.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NationZero-iOS-ipa
+          path: NationZero-unsigned.ipa
+          retention-days: 90
+
+      - name: Publicar na release (tags)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: NationZero-unsigned.ipa
+          tag_name: ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

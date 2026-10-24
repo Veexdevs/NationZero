@@ -1,0 +1,34 @@
+# Dependências
+node_modules/
+.pnp.*
+.yarn/
+npm-debug.log*
+yarn-error.log*
+
+# Builds e artefatos
+release/
+dist/
+out/
+*.tsbuildinfo
+*.log
+
+# Projetos nativos gerados pelo Capacitor (recriados no CI com `npx cap add`)
+android/
+ios/
+*.keystore
+*.jks
+*.mobileprovision
+*.p12
+
+# Sistema
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Temporários
+*.tmp
+*.bak
+.env
+.env.*

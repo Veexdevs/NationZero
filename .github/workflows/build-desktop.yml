@@ -1,0 +1,144 @@
+name: Build Desktop (.exe / .dmg / .AppImage)
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Testes do motor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Rodar testes
+        run: node scripts/test.cjs
+
+  desktop:
+    name: Build ${{ matrix.label }}
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: win
+            label: Windows (.exe)
+          - os: macos-latest
+            target: mac
+            label: macOS (.dmg)
+          - os: ubuntu-latest
+            target: linux
+            label: Linux (.AppImage / .deb)
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Build (Linux precisa de libs extras)
+        if: matrix.target == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libarchive-tools fakeroot rpm
+
+      - name: Empacotar
+        shell: bash
+        run: |
+          set -o pipefail
+          npx electron-builder --${{ matrix.target }} --publish never 2>&1 | tee build.log
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+        continue-on-error: true
+        id: pack
+
+      - name: Diagnóstico (envia o erro como comentário no PR)
+        if: steps.pack.outcome == 'failure' && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            printf '### Falha no build (%s)\n\n' "${{ matrix.label }}"
+            printf '\n```\n'
+            tail -n 60 build.log 2>/dev/null || echo "sem log"
+            printf '\n```\n'
+          } > /tmp/msg.md
+          head -c 60000 /tmp/msg.md | gh pr comment ${{ github.event.pull_request.number }} --body-file - || true
+
+      - name: Falhar se o build falhou
+        if: steps.pack.outcome == 'failure'
+        run: exit 1
+
+      - name: Listar artefatos
+        shell: bash
+        run: ls -laR release 2>/dev/null || echo "pasta release nao existe"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NationZero-${{ matrix.target }}
+          path: |
+            release/*.exe
+            release/*.dmg
+            release/*.zip
+            release/*.AppImage
+            release/*.deb
+            release/*.blockmap
+            release/*.yml
+          if-no-files-found: warn
+          retention-days: 30
+
+  release:
+    name: Publicar release
+    needs: desktop
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Coletar arquivos
+        run: |
+          mkdir -p dist
+          find artifacts -type f \( -name '*.exe' -o -name '*.dmg' -o -name '*.zip' -o -name '*.AppImage' -o -name '*.deb' \) -exec cp {} dist/ \;
+          ls -la dist
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: NationZero ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: true
+          files: dist/*
+          body: |
+            ## NationZero ${{ github.ref_name }}
+
+            Baixe a versão do seu sistema:
+
+            | Plataforma | Arquivo |
+            |---|---|
+            | 🪟 Windows | `NationZero-*-x64.exe` (instalador) ou `NationZero-*-portable.exe` |
+            | 🍎 macOS | `NationZero-*-x64.dmg` / `NationZero-*-arm64.dmg` |
+            | 🐧 Linux | `NationZero-*-x86_64.AppImage` ou `.deb` |
+            | 🤖 Android | veja a release do workflow "Build Android" |
+            | 🍏 iOS | sem assinatura — requer compilação própria pelo workflow "Build iOS" |
+
+            > Os instaladores de Windows/macOS não são assinados digitalmente (projeto open source sem certificado).
+            > No Windows use "Mais informações → Executar assim mesmo"; no macOS, clique com o botão direito → Abrir.
