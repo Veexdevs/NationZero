@@ -45,7 +45,7 @@ export function renderLegacy(app) {
     <div class="card" style="margin-bottom:14px">
       <div class="flex between center wrap gap-14">
         <div class="flex gap-14 center">
-          <div class="head-flag" style="width:60px;height:60px;font-size:28px">${esc(st.meta.flag || 'landmark')}</div>
+          <div class="head-flag" style="width:60px;height:60px">${iconOf(st.meta.flag || 'landmark', 30)}</div>
           <div>
             <div style="font-size:20px;font-weight:800">${esc(st.meta.nationName)}</div>
             <div class="small muted">${esc(st.meta.motto || '')}</div>
@@ -78,7 +78,7 @@ export function renderLegacy(app) {
         return `
           <div class="law" style="${has ? 'border-color:rgba(245,197,66,.4);background:rgba(245,197,66,.05)' : 'opacity:.55'}">
             <div class="law-top">
-              <span class="law-ico">${has ? a.icon : 'lock'}</span>
+              <span class="law-ico">${iconOf(has ? a.icon : 'lock', 15)}</span>
               <div><div class="law-name">${esc(a.name)}</div><div class="law-desc">${esc(a.desc)}</div></div>
             </div>
           </div>`;
@@ -114,7 +114,7 @@ export function renderLegacy(app) {
         <label>Emblema</label>
         <div class="chips">
           ${['landmark','bird','wheat','cog','waves','flame','flame','star','tree-deciduous','shield','sun','paw-print','paw-print','zap','flower-2','mountain'].map((f) => `
-            <button class="chip ${st.meta.flag === f ? 'active' : ''}" data-cmd="leg:flag:${f}" style="font-size:16px">${f}</button>`).join('')}
+            <button class="chip ${st.meta.flag === f ? 'active' : ''}" data-cmd="leg:flag:${f}">${iconOf(f, 16)}</button>`).join('')}
         </div>
       </div>
       <p class="tiny dim">As mudanças são salvas automaticamente. Renomear o país não engana ninguém — mas é divertido.</p>

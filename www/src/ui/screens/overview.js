@@ -33,7 +33,7 @@ export function renderOverview(app) {
   return `
     <div class="screen-head">
       <div>
-        <h2 class="screen-title">${esc(st.meta.flag || 'landmark')} ${esc(st.meta.nationName)}</h2>
+        <h2 class="screen-title">${iconOf(st.meta.flag || 'landmark', 20)} ${esc(st.meta.nationName)}</h2>
         <p class="screen-sub">${esc(st.meta.motto || '')} · Capital: ${esc(st.meta.capital)} · ${esc(dateLabel(st))}</p>
       </div>
       <div class="flex gap-8 wrap">

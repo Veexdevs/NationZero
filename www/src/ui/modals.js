@@ -32,7 +32,7 @@ export function showEventModal(app, eventId, onDone) {
     <div class="modal-choices">
       ${event.choices.map((c, i) => `
         <button class="choice" data-evt-choice="${i}">
-          <span class="cico">${c.icon || 'circle-dot'}</span>
+          <span class="cico">${iconOf(c.icon || 'circle-dot', 16)}</span>
           <span style="flex:1">
             <span class="ct">${esc(c.label)}</span>
             ${c.hint ? `<span class="cd">${esc(c.hint)}</span>` : ''}
@@ -209,7 +209,7 @@ export function showPartyModal(app, onDone) {
     <div class="field">
       <label>Símbolo</label>
       <div class="chips" id="party-symbols">
-        ${PARTY_SYMBOLS.map((s) => `<button class="chip ${s === draft.symbol ? 'active' : ''}" data-symbol="${s}" style="font-size:16px">${s}</button>`).join('')}
+        ${PARTY_SYMBOLS.map((s) => `<button class="chip ${s === draft.symbol ? 'active' : ''}" data-symbol="${s}">${iconOf(s, 16)}</button>`).join('')}
       </div>
     </div>
 
@@ -478,7 +478,7 @@ export function showTargetModal(app, actionId) {
         const rl = relationLabel(rel.relation);
         return `
           <button class="choice" data-target="${c.id}">
-            <span class="cico">${c.flag}</span>
+            <span class="cico">${iconOf(c.flag || 'flag', 16)}</span>
             <span style="flex:1">
               <span class="ct">${esc(c.name)}</span>
               <span class="cd">${esc(rl.label)} (${Math.round(rel.relation)}) · poder militar ${c.power} · ${esc(c.trait)}</span>
