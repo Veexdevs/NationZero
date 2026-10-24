@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#07100d" />
+  <meta name="description" content="NationZero — construa um país, suba ao poder e decida o que fazer com ele." />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="NationZero" />
+  <meta name="color-scheme" content="dark" />
+  <title>NationZero</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
+  <link rel="icon" href="./favicon.png" />
+  <link rel="stylesheet" href="./src/ui/style.css" />
+</head>
+<body>
+  <div id="app">
+    <div class="boot">
+      <div class="boot-emblem">🏛️</div>
+      <h1 class="boot-title">NATION<span>ZERO</span></h1>
+      <p class="boot-sub">Carregando o Estado…</p>
+    </div>
+  </div>
+  <div id="modal-root"></div>
+  <div id="toast-root" class="toast-root"></div>
+  <noscript>
+    <p style="padding:24px;color:#e6f3ee">NationZero precisa de JavaScript ativado para funcionar.</p>
+  </noscript>
+  <script type="module" src="./src/ui/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    }
+  </script>
+</body>
+</html>

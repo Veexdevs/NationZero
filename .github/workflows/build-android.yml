@@ -1,0 +1,84 @@
+name: Build Android (.apk)
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  android:
+    name: Gerar APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Criar projeto Android (Capacitor)
+        run: |
+          npx cap add android
+          npx cap sync android
+
+      - name: Aplicar ícones
+        run: node scripts/native-icons.js
+
+      - name: Ajustar nome e versão
+        run: |
+          node -e "
+          const fs=require('fs');
+          const p='android/app/build.gradle';
+          if (fs.existsSync(p)) {
+            let s=fs.readFileSync(p,'utf8');
+            s=s.replace(/versionCode\s+\d+/, 'versionCode 1');
+            s=s.replace(/versionName\s+\"[^\"]*\"/, 'versionName \"1.0.0\"');
+            fs.writeFileSync(p,s);
+          }
+          const strings='android/app/src/main/res/values/strings.xml';
+          if (fs.existsSync(strings)) {
+            let s=fs.readFileSync(strings,'utf8');
+            s=s.replace(/<string name=\"app_name\">.*<\/string>/, '<string name=\"app_name\">NationZero</string>');
+            s=s.replace(/<string name=\"title_activity_main\">.*<\/string>/, '<string name=\"title_activity_main\">NationZero</string>');
+            fs.writeFileSync(strings,s);
+          }
+          "
+
+      - name: Compilar APK de debug
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Renomear e coletar APK
+        run: |
+          mkdir -p dist
+          find android/app/build/outputs/apk -name '*.apk' -exec cp {} dist/NationZero-1.0.0.apk \;
+          ls -la dist
+          ls -la dist/*.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NationZero-APK
+          path: dist/NationZero-1.0.0.apk
+          retention-days: 90
+
+      - name: Publicar na release (tags)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/NationZero-1.0.0.apk
+          tag_name: ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
