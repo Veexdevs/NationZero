@@ -8,7 +8,7 @@
 leis, partido, eleições, golpe, ditadura, espionagem, alianças — e conquista província por província até o mundo inteiro
 estar pintado com a sua cor.
 
-> **2.317 províncias · 173 países · mapa dinâmico em tela cheia (paisagem)**
+> **3.427 províncias · 172 países · mapa dinâmico em tela cheia (paisagem)**
 > Roda no **navegador**, **Windows (.exe)**, **Linux (.AppImage/.deb)**, **macOS (.dmg)**,
 > **Android (.apk)** e **iOS (.ipa)** — tudo a partir do mesmo código.
 
@@ -31,9 +31,9 @@ estar pintado com a sua cor.
 
 ## O mapa
 
-- **2.317 províncias** desenhadas a partir de dados reais (Natural Earth), cada uma com população,
+- **3.427 províncias** desenhadas a partir de dados reais (Natural Earth), cada uma com população,
   desenvolvimento, guarnição, turbulência e construções.
-- **173 países** com nome em português, região, população real, área e índice de desenvolvimento.
+- **172 países** com nome em português, região, população real, área e índice de desenvolvimento.
 - **Mapa vivo:** cores políticas por dono, exércitos com números, frentes de guerra, capital marcada,
   zoom (roda do mouse, pinça, botões, teclado) e arraste livre.
 - **Tela cheia e deitada:** interface pensada para paisagem — barra superior de recursos, trilha lateral de

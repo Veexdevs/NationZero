@@ -11,7 +11,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const topojson = require('topojson-client');
-const { geoNaturalEarth1, geoPath } = require('d3-geo');
+const { geoNaturalEarth1, geoNaturalEarth1Raw, geoPath } = require('d3-geo');
 const pc = require('polygon-clipping');
 const wc = require('world-countries');
 const pops = require('country-json/src/country-by-population.json');
@@ -111,6 +111,86 @@ const projection = geoNaturalEarth1().fitExtent(
 );
 const pathGen = geoPath(projection);
 
+const K = projection.scale();
+const T = projection.translate();
+
+/** Projeta lon/lat (graus) sem normalizar o antimeridiano. */
+function projectXY(lon, lat) {
+  const r = geoNaturalEarth1Raw((lon * Math.PI) / 180, (lat * Math.PI) / 180);
+  if (!r || !Number.isFinite(r[0]) || !Number.isFinite(r[1])) return null;
+  return [T[0] + K * r[0], T[1] - K * r[1]];
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Antimeridiano                                                       */
+/* ------------------------------------------------------------------ */
+
+/** Desfaz o salto de longitude (180° → -180°) dentro de um anel. */
+function unwrapRing(ring) {
+  const out = [];
+  let prev = ring[0][0];
+  for (const [lon0, lat] of ring) {
+    let lon = lon0;
+    while (lon - prev > 180) lon -= 360;
+    while (lon - prev < -180) lon += 360;
+    prev = lon;
+    out.push([lon, lat]);
+  }
+  return out;
+}
+
+/**
+ * Projeta uma geometria GeoJSON em coordenadas de tela.
+ * Anéis são "desenrolados" no antimeridiano e cada polígono é projetado em
+ * três deslocamentos de longitude: assim países que cruzam o 180° aparecem
+ * partidos nas duas bordas do mapa, sem faixas atravessando o oceano.
+ */
+function projectGeometry(geom) {
+  const raw = [];
+  if (geom.type === 'Polygon') raw.push(geom.coordinates);
+  else if (geom.type === 'MultiPolygon') raw.push(...geom.coordinates);
+
+  const frame = [[[0, 0], [WIDTH, 0], [WIDTH, HEIGHT], [0, HEIGHT], [0, 0]]];
+  const out = [];
+
+  for (const poly of raw) {
+    const rings = poly.map(unwrapRing);
+    if (!rings.length || !rings[0].length) continue;
+    let minLon = Infinity;
+    let maxLon = -Infinity;
+    for (const ring of rings) for (const [lon] of ring) {
+      if (lon < minLon) minLon = lon;
+      if (lon > maxLon) maxLon = lon;
+    }
+    const shifts = [0];
+    if (minLon < -180) shifts.push(360);
+    if (maxLon > 180) shifts.push(-360);
+
+    for (const shift of shifts) {
+      const projected = rings
+        .map((ring) => ring.map(([lon, lat]) => projectXY(lon + shift, lat)).filter(Boolean))
+        .filter((ring) => ring.length > 2);
+      if (!projected.length) continue;
+
+      const bb = polyBBox(projected);
+      if (bb[2] < 0 || bb[0] > WIDTH || bb[3] < 0 || bb[1] > HEIGHT) continue;
+
+      let pieces;
+      try {
+        pieces = pc.intersection(projected, frame);
+      } catch (err) {
+        pieces = null;
+      }
+      if (!pieces) { out.push(projected); continue; }
+      for (const piece of pieces) {
+        if (piece[0] && piece[0].length > 2) out.push(piece);
+      }
+    }
+  }
+  return out;
+}
+
 /* ------------------------------------------------------------------ */
 /* Províncias por recorte da grade                                     */
 /* ------------------------------------------------------------------ */
@@ -160,36 +240,39 @@ features.forEach(({ f }) => {
   // ignora territórios sem soberania reconhecida (sem ISO ou sem nome)
   if (!meta.cca2 && !meta.name?.common) return;
   if (/antarctica/i.test(meta.name?.common || '')) return;
+  // possessões antárticas e bases de pesquisa não entram no jogo
+  if ((meta.subregion || '') === 'Antarctic' || (meta.region || '') === 'Antarctic') return;
   const iso2 = meta.cca2 || '';
   const iso3 = meta.cca3 || '';
   const namePt = meta.translations?.por?.common || meta.name?.common || `Região ${f.id}`;
   const pop = popByName.get((meta.name?.common || '').toLowerCase()) || 0;
 
-  // geometria em coordenadas de tela
-  const polys = [];
-  if (f.geometry.type === 'Polygon') polys.push(f.geometry.coordinates);
-  else if (f.geometry.type === 'MultiPolygon') polys.push(...f.geometry.coordinates);
-
-  const projected = polys.map((poly) => poly.map((ring) => ring.map((pt) => projection(pt)).filter(Boolean)));
+  // geometria em coordenadas de tela (antimeridiano já recortado)
+  const projected = projectGeometry(f.geometry);
 
   const bbox = polyBBox(projected.flat());
   const [bx0, by0, bx1, by1] = bbox;
 
-  // número de células proporcional ao tamanho, mínimo 1
-  const w = bx1 - bx0;
-  const h = by1 - by0;
-  const cellsX = Math.max(1, Math.round(w / CELL));
-  const cellsY = Math.max(1, Math.round(h / CELL));
-
   const cid = String(Number(f.id));
   const countryProvs = [];
 
-  for (let gy = 0; gy < cellsY; gy++) {
-    for (let gx = 0; gx < cellsX; gx++) {
-      const x0 = bx0 + (w * gx) / cellsX;
-      const x1 = bx0 + (w * (gx + 1)) / cellsX;
-      const y0 = by0 + (h * gy) / cellsY;
-      const y1 = by0 + (h * (gy + 1)) / cellsY;
+  // grade regular sobre o mapa inteiro (países que cruzam o antimeridiano
+  // têm pedaços nas duas bordas e precisam de células em ambas)
+  // países pequenos usam uma grade local mais fina para não virarem 1 província
+  const small = (bx1 - bx0) < CELL * 2.6 && (by1 - by0) < CELL * 2.6;
+  const step = small ? Math.max(3, Math.min(bx1 - bx0, by1 - by0) / 3) : CELL;
+  const gx0 = Math.floor(bx0 / step);
+  const gx1 = Math.ceil(bx1 / step);
+  const gy0 = Math.floor(by0 / step);
+  const gy1 = Math.ceil(by1 / step);
+  const minArea = small ? 0.4 : 14;
+
+  for (let gy = gy0; gy < gy1; gy++) {
+    for (let gx = gx0; gx < gx1; gx++) {
+      const x0 = gx * step;
+      const x1 = x0 + step;
+      const y0 = gy * step;
+      const y1 = y0 + step;
       const clipBox = [[[x0, y0], [x1, y0], [x1, y1], [x0, y1], [x0, y0]]];
 
       let clipped = null;
@@ -204,8 +287,10 @@ features.forEach(({ f }) => {
         const outer = poly[0];
         if (!outer || outer.length < 4) continue;
         const area = areaOf(poly);
-        if (area < 7) continue; // descarta lascas minúsculas
+        if (area < minArea) continue; // descarta lascas minúsculas
         const bb = polyBBox(poly);
+        // descarta faixas degeneradas (geometrias que cruzam o antimeridiano)
+        if (bb[2] - bb[0] > step * 1.6 || bb[3] - bb[1] > step * 1.6) continue;
         const cx = (bb[0] + bb[2]) / 2;
         const cy = (bb[1] + bb[3]) / 2;
         countryProvs.push({
@@ -214,7 +299,7 @@ features.forEach(({ f }) => {
           path: ringToPath(poly),
           x: round(cx), y: round(cy),
           b: [round(bb[0]), round(bb[1]), round(bb[2]), round(bb[3])],
-          a: Math.round(area),
+          a: Math.max(1, Math.round(area)),
         });
       }
     }
@@ -224,6 +309,7 @@ features.forEach(({ f }) => {
   if (!countryProvs.length) {
     for (const poly of projected) {
       const bb = polyBBox(poly);
+      if (bb[2] - bb[0] > 2000) continue;
       countryProvs.push({
         cid, name: namePt, iso2, iso3, region: meta.region || '', sub: meta.subregion || '',
         path: ringToPath(poly), x: round((bb[0] + bb[2]) / 2), y: round((bb[1] + bb[3]) / 2),

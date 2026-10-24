@@ -143,10 +143,15 @@ test('batalha resolve e pode tomar província', () => {
   eq(world.owners[target.to], playerIdx);
 });
 test('nação sem províncias morre', () => {
-  const tiny = world.nations.findIndex((n) => n.alive && n.provCount === 1);
-  const prov = N.nationsOf(world, tiny)[0];
-  N.changeOwner(world, prov, playerIdx);
-  eq(world.nations[tiny].alive, false);
+  // esvazia uma nação pequena, deixando só uma província
+  const victim = world.nations
+    .filter((n) => n.alive && n.i !== playerIdx)
+    .sort((a, b) => a.provCount - b.provCount)[2];
+  const provs = N.nationsOf(world, victim.i);
+  for (const p of provs.slice(1)) N.changeOwner(world, p, playerIdx);
+  eq(victim.provCount, 1);
+  N.changeOwner(world, provs[0], playerIdx);
+  eq(victim.alive, false);
 });
 test('paz encerra a guerra', () => {
   N.makePeace(world, playerIdx, enemy);
