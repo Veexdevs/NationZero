@@ -90,6 +90,36 @@ export function renderLegacy(app) {
     </div>
 
     <div class="card mt-14">
+      <div class="card-title">✏️ Identidade nacional</div>
+      <div class="grid cols-2">
+        <div class="field">
+          <label>Nome do país</label>
+          <input class="input" data-field="meta:nationName" maxlength="28" value="${esc(st.meta.nationName)}" />
+        </div>
+        <div class="field">
+          <label>Capital</label>
+          <input class="input" data-field="meta:capital" maxlength="24" value="${esc(st.meta.capital)}" />
+        </div>
+        <div class="field">
+          <label>Nome do líder</label>
+          <input class="input" data-field="meta:leaderName" maxlength="24" value="${esc(st.meta.leaderName)}" />
+        </div>
+        <div class="field">
+          <label>Lema</label>
+          <input class="input" data-field="meta:motto" maxlength="40" value="${esc(st.meta.motto || '')}" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Emblema</label>
+        <div class="chips">
+          ${['🏛️','🦅','🌾','⚙️','🌊','🔥','🐉','⭐','🌳','🛡️','☀️','🦁','🐺','⚡','🌹','🗿'].map((f) => `
+            <button class="chip ${st.meta.flag === f ? 'active' : ''}" data-cmd="leg:flag:${f}" style="font-size:16px">${f}</button>`).join('')}
+        </div>
+      </div>
+      <p class="tiny dim">As mudanças são salvas automaticamente. Renomear o país não engana ninguém — mas é divertido.</p>
+    </div>
+
+    <div class="card mt-14">
       <div class="card-title">💾 Save</div>
       <p class="small muted" style="line-height:1.6;margin-bottom:12px">
         O progresso é salvo automaticamente no seu dispositivo. Exporte um arquivo para continuar em outro aparelho.
@@ -105,6 +135,12 @@ export function renderLegacy(app) {
 
 registerCommands({
   leg(action, arg, el, ev, app) {
+    if (action === 'flag') {
+      app.state.meta.flag = arg;
+      app.save();
+      app.render();
+      return;
+    }
     if (action === 'export') {
       app.save(false);
       toast('Save salvo localmente', 'good', '💾');

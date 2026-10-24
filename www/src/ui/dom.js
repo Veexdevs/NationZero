@@ -77,8 +77,9 @@ export function openModal(html, opts = {}) {
   closeModal();
   modalRoot = document.getElementById('modal-root');
   if (!modalRoot) return;
+  const dismissible = opts.dismissible !== false ? '1' : '0';
   modalRoot.innerHTML = `
-    <div class="modal-backdrop" data-modal-backdrop="1">
+    <div class="modal-backdrop" data-modal-backdrop="1" data-dismissible="${dismissible}">
       <div class="modal ${opts.wide ? 'wide' : ''} ${opts.className || ''}" role="dialog" aria-modal="true">
         ${html}
       </div>

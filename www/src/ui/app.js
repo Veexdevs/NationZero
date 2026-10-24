@@ -61,7 +61,9 @@ export const app = {
     this.render();
     document.addEventListener('click', onDocumentClick);
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && document.querySelector('.modal-backdrop')) closeModal();
+      if (e.key !== 'Escape') return;
+      const bd = document.querySelector('.modal-backdrop');
+      if (bd && bd.getAttribute('data-dismissible') !== '0') closeModal();
     });
   },
 
@@ -377,12 +379,12 @@ function renderShell(app) {
     </div>
 
     <nav class="mobile-nav">
-      ${TABS.filter((t) => t.mobile).map((t) => `
+      ${['overview', 'laws', 'actions', 'power'].map((id) => TABS.find((t) => t.id === id)).map((t) => `
         <button class="${app.tab === t.id ? 'active' : ''}" data-cmd="nav:${t.id}">
           <span class="ico">${t.icon}</span><span>${esc(t.label)}</span>
         </button>`).join('')}
-      <button class="${app.tab === 'chronicle' || app.tab === 'legacy' || app.tab === 'economy' ? 'active' : ''}" data-cmd="nav:chronicle">
-        <span class="ico">📖</span><span>Crônica</span>
+      <button class="${['economy', 'politics', 'world', 'chronicle', 'legacy'].includes(app.tab) ? 'active' : ''}" data-cmd="nav:more">
+        <span class="ico">☰</span><span>Mais</span>
       </button>
     </nav>
 
@@ -481,7 +483,7 @@ function onDocumentClick(e) {
     }
   }
   const backdrop = e.target.closest('[data-modal-backdrop]');
-  if (backdrop && e.target === backdrop) closeModal();
+  if (backdrop && e.target === backdrop && backdrop.getAttribute('data-dismissible') !== '0') closeModal();
   const closeBtn = e.target.closest('[data-close]');
   if (closeBtn) closeModal();
 }
@@ -517,6 +519,7 @@ function handleCommand(cmd, el, event) {
       break;
 
     case 'nav':
+      if (action === 'more') { showMoreMenu(app); break; }
       app.goto(action);
       break;
 
@@ -551,6 +554,33 @@ document.addEventListener('keydown', (e) => {
     app.advance();
   }
 });
+
+/* Menu "Mais" do celular */
+function showMoreMenu(app) {
+  openModal(`
+    <div class="modal-head">
+      <div class="modal-ico">☰</div>
+      <div><div class="modal-tag">Navegação</div><div class="modal-title">Ir para</div></div>
+    </div>
+    <div class="modal-choices">
+      ${TABS.map((t) => `
+        <button class="choice" data-more-tab="${t.id}">
+          <span class="cico">${t.icon}</span>
+          <span style="flex:1"><span class="ct">${esc(t.label)}</span></span>
+        </button>`).join('')}
+      <button class="choice" data-cmd="menu:settings"><span class="cico">⚙️</span><span style="flex:1"><span class="ct">Ajustes</span></span></button>
+      <button class="choice" data-cmd="menu:help"><span class="cico">📖</span><span style="flex:1"><span class="ct">Como jogar</span></span></button>
+    </div>
+    <div class="modal-actions"><button class="btn ghost" data-close>Fechar</button></div>
+  `, {
+    onMount(root) {
+      root.querySelectorAll('[data-more-tab]').forEach((btn) => btn.addEventListener('click', () => {
+        closeModal();
+        app.goto(btn.getAttribute('data-more-tab'));
+      }));
+    },
+  });
+}
 
 /* util interno usado no header */
 function money(v) {

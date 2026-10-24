@@ -39,6 +39,7 @@ export function showEventModal(app, eventId, onDone) {
     </div>
   `, {
     className: 'event-modal',
+    dismissible: false,
     onMount(root) {
       root.querySelectorAll('[data-evt-choice]').forEach((btn) => {
         btn.addEventListener('click', () => {
