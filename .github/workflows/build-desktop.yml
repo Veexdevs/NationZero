@@ -1,5 +1,9 @@
 name: Build Desktop (.exe / .dmg / .AppImage)
 
+permissions:
+  contents: write
+  pull-requests: write
+
 on:
   workflow_dispatch:
   push:
@@ -54,7 +58,10 @@ jobs:
           sudo apt-get install -y --no-install-recommends libarchive-tools fakeroot rpm
 
       - name: Empacotar
-        run: npx electron-builder --${{ matrix.target }} --publish never 2>&1 | tee build.log
+        shell: bash
+        run: |
+          set -o pipefail
+          npx electron-builder --${{ matrix.target }} --publish never 2>&1 | tee build.log
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
@@ -80,7 +87,7 @@ jobs:
 
       - name: Listar artefatos
         shell: bash
-        run: ls -la release || dir release
+        run: ls -laR release 2>/dev/null || echo "pasta release nao existe"
 
       - uses: actions/upload-artifact@v4
         with:
