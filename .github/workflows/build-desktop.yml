@@ -54,10 +54,29 @@ jobs:
           sudo apt-get install -y --no-install-recommends libarchive-tools fakeroot rpm
 
       - name: Empacotar
-        run: npx electron-builder --${{ matrix.target }} --publish never
+        run: npx electron-builder --${{ matrix.target }} --publish never 2>&1 | tee build.log
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
+        continue-on-error: true
+        id: pack
+
+      - name: Diagnóstico (envia o erro como comentário no PR)
+        if: steps.pack.outcome == 'failure' && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            printf '### Falha no build (%s)\n\n' "${{ matrix.label }}"
+            printf '\n```\n'
+            tail -n 60 build.log 2>/dev/null || echo "sem log"
+            printf '\n```\n'
+          } > /tmp/msg.md
+          head -c 60000 /tmp/msg.md | gh pr comment ${{ github.event.pull_request.number }} --body-file - || true
+
+      - name: Falhar se o build falhou
+        if: steps.pack.outcome == 'failure'
+        run: exit 1
 
       - name: Listar artefatos
         shell: bash
