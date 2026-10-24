@@ -1,6 +1,0 @@
-{
-  "name": "nationzero-web",
-  "private": true,
-  "type": "module",
-  "description": "Código do jogo (ESM puro, sem build)."
-}

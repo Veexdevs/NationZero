@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 20
       - name: Rodar testes
-        run: node scripts/test.js
+        run: node scripts/test.cjs
 
   desktop:
     name: Build ${{ matrix.label }}

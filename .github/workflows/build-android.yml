@@ -33,7 +33,7 @@ jobs:
           npx cap sync android
 
       - name: Aplicar ícones
-        run: node scripts/native-icons.js
+        run: node scripts/native-icons.cjs
 
       - name: Ajustar nome e versão
         run: |

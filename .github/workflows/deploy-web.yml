@@ -28,7 +28,7 @@ jobs:
           node-version: 20
 
       - name: Testes
-        run: node scripts/test.js
+        run: node scripts/test.cjs
 
       - uses: actions/configure-pages@v5
 

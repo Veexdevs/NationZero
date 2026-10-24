@@ -151,9 +151,9 @@ www/                     # o jogo (ESM puro, sem bundler, sem dependências)
       world.js           # diplomacia, espionagem, guerra
     data/                # conteúdo: leis, ações, eventos, países, origens
     ui/                  # interface: app, telas, modais, componentes
-electron/                # casca desktop (.exe/.dmg/.AppImage)
+electron/                # casca desktop (.exe/.dmg/.AppImage) — CommonJS (main.cjs)
 build/                   # ícones pré-gerados (web, Android, iOS) + arte original
-scripts/                 # servidor local, testes, geração de ícones
+scripts/                 # servidor local (serve.cjs), testes (test.cjs, ui-test.mjs), ícones
 .github/workflows/       # CI: .exe/.dmg/.AppImage, .apk, .ipa e GitHub Pages
 ```
 
