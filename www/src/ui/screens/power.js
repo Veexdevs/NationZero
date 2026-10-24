@@ -8,6 +8,7 @@ import { statCard, meter, ideologyBars, factionRows, rolePill, regimePill, empty
 import { registerCommands } from '../registry.js';
 import { showDecreeModal, showCoupModal, showPurgeModal } from '../modals.js';
 import { toast, sfx } from '../dom.js';
+import { iconOf } from '../icons.js';
 
 export function renderPower(app) {
   const st = app.state;
@@ -23,7 +24,7 @@ export function renderPower(app) {
   return `
     <div class="screen-head">
       <div>
-        <h2 class="screen-title">👑 Poder</h2>
+        <h2 class="screen-title">${iconOf('crown', 15)} Poder</h2>
         <p class="screen-sub">Como você se mantém no topo — e o que está disposto a fazer para não sair.</p>
       </div>
       <div class="flex gap-8 wrap">${rolePill(st)} ${regimePill(st)}</div>
@@ -38,7 +39,7 @@ export function renderPower(app) {
 
     <div class="grid cols-2 mt-14">
       <div class="card">
-        <div class="card-title">🏛️ Controle institucional</div>
+        <div class="card-title">${iconOf('landmark', 15)} Controle institucional</div>
         ${meter('Mídia', st.institutions.midia, { color: barColor(st.institutions.midia) })}
         ${meter('Judiciário', st.institutions.judiciario, { color: barColor(st.institutions.judiciario) })}
         ${meter('Polícia', st.institutions.policia, { color: barColor(st.institutions.policia) })}
@@ -48,7 +49,7 @@ export function renderPower(app) {
       </div>
 
       <div class="card" style="border-color:${fc.coupChance > 40 ? 'rgba(255,93,108,.4)' : 'var(--line)'}">
-        <div class="card-title">⚠️ Risco de queda <span class="sub" style="color:${riskColor}">${riskLevel}</span></div>
+        <div class="card-title">${iconOf('triangle-alert', 15)} Risco de queda <span class="sub" style="color:${riskColor}">${riskLevel}</span></div>
         <div class="flex between center" style="margin-bottom:10px">
           <span class="small muted">Chance de golpe militar contra você</span>
           <span style="font-size:22px;font-weight:800;color:${riskColor}">${fc.coupChance.toFixed(0)}%</span>
@@ -58,9 +59,9 @@ export function renderPower(app) {
         ${meter('Lealdade militar', st.stats.lealdadeMilitar, { color: barColor(st.stats.lealdadeMilitar) })}
         ${meter('Aprovação', st.stats.aprovacao, { color: barColor(st.stats.aprovacao) })}
         <div class="flex gap-8 mt-14 wrap">
-          ${isRuler(st) && !isAuthoritarian(st) ? '<button class="btn small danger" data-cmd="pow:coup:autogolpe">⚡ Autogolpe</button>' : ''}
-          ${isRuler(st) ? '<button class="btn small danger" data-cmd="pow:coup:proclamar_ditadura">👑 Proclamar ditadura</button>' : ''}
-          ${!isRuler(st) ? '<button class="btn small danger" data-cmd="pow:coup:golpe_militar">🪖 Golpe militar</button>' : ''}
+          ${isRuler(st) && !isAuthoritarian(st) ? `<button class="btn small danger" data-cmd="pow:coup:autogolpe">${iconOf('zap', 15)} Autogolpe</button>` : ''}
+          ${isRuler(st) ? `<button class="btn small danger" data-cmd="pow:coup:proclamar_ditadura">${iconOf('crown', 15)} Proclamar ditadura</button>` : ''}
+          ${!isRuler(st) ? `<button class="btn small danger" data-cmd="pow:coup:golpe_militar">${iconOf('shield', 15)} Golpe militar</button>` : ''}
         </div>
       </div>
     </div>
@@ -68,7 +69,7 @@ export function renderPower(app) {
     <div class="section-title">Ferramentas do regime</div>
     <div class="grid cols-2">
       <div class="card">
-        <div class="card-title">🗡️ Coerção e controle</div>
+        <div class="card-title">${iconOf('sword', 15)} Coerção e controle</div>
         <div class="flex gap-8 wrap" style="margin-bottom:10px">
           <button class="btn small" data-cmd="pow:purge">Purgar adversários</button>
           <button class="btn small" data-cmd="pow:action:prender_oposicao">Prisões políticas</button>
@@ -79,11 +80,11 @@ export function renderPower(app) {
           <button class="btn small" data-cmd="pow:action:cercar_capital">Cercar a capital</button>
           <button class="btn small" data-cmd="pow:action:culto">Culto à personalidade</button>
         </div>
-        <div class="tiny muted">Ações exigem ⚡ Poder e podem ter recarga. Veja os detalhes na aba Ações.</div>
+        <div class="tiny muted">Ações exigem ${iconOf('zap', 15)} Poder e podem ter recarga. Veja os detalhes na aba Ações.</div>
       </div>
 
       <div class="card">
-        <div class="card-title">✍️ Decretos personalizados</div>
+        <div class="card-title">${iconOf('pen-line', 15)} Decretos personalizados</div>
         <p class="small muted" style="line-height:1.55;margin-bottom:12px">
           Invente sua própria medida: escolha um nome, uma justificativa e até três efeitos.
           É o jeito de fazer algo que nenhuma lei prevê.
@@ -94,7 +95,7 @@ export function renderPower(app) {
             <div class="tiny muted" style="margin-bottom:6px">SEUS DECRETOS</div>
             ${st.custom.slice(-4).reverse().map((c) => `
               <div class="row" style="margin-bottom:6px">
-                <span class="ico">✍️</span>
+                <span class="ico">${iconOf('pen-line', 15)}</span>
                 <div class="body"><div class="name">${esc(c.name)}</div><div class="desc">${esc(c.date)} · ${c.picks.length} medidas</div></div>
               </div>`).join('')}
           </div>` : ''}
@@ -103,29 +104,29 @@ export function renderPower(app) {
 
     <div class="grid cols-2 mt-14">
       <div class="card">
-        <div class="card-title">🧭 Ideologia do seu governo</div>
+        <div class="card-title">${iconOf('compass', 15)} Ideologia do seu governo</div>
         <p class="tiny muted" style="margin-bottom:12px">Cada eixo puxa facções e eleitores diferentes. Você também pode ajustar aqui, como um reposicionamento público.</p>
         ${ideologyBars(st, true)}
         <p class="tiny dim mt-8">As barras mudam sozinhas conforme suas leis e ações.</p>
       </div>
 
       <div class="card">
-        <div class="card-title">🤝 Bases de apoio <span class="sub">média ${Math.round(factionAverage(st))}</span></div>
+        <div class="card-title">${iconOf('handshake', 15)} Bases de apoio <span class="sub">média ${Math.round(factionAverage(st))}</span></div>
         ${factionRows(st)}
       </div>
     </div>
 
     <div class="card mt-14" style="border-color:rgba(255,93,108,.28)">
-      <div class="card-title">☢️ Zona de risco</div>
+      <div class="card-title">${iconOf('radiation', 15)} Zona de risco</div>
       <p class="small muted" style="line-height:1.6;margin-bottom:12px">
         Atalhos para decisões que mudam o regime — ou terminam o jogo. Sem confirmação dupla, sem volta.
       </p>
       <div class="flex gap-8 wrap">
-        <button class="btn small danger" data-cmd="pow:action:fechar_congresso">🔒 Fechar o parlamento</button>
-        <button class="btn small danger" data-cmd="pow:action:reeleicao_decreto">⏳ Adiar eleições</button>
-        <button class="btn small danger" data-cmd="pow:action:autoanistia">🕯️ Autoanistia</button>
-        <button class="btn small" data-cmd="pow:action:fugir">✈️ Preparar exílio</button>
-        <button class="btn small" data-cmd="pow:action:renunciar">🚪 Renunciar</button>
+        <button class="btn small danger" data-cmd="pow:action:fechar_congresso">${iconOf('lock', 15)} Fechar o parlamento</button>
+        <button class="btn small danger" data-cmd="pow:action:reeleicao_decreto">${iconOf('hourglass', 15)} Adiar eleições</button>
+        <button class="btn small danger" data-cmd="pow:action:autoanistia">${iconOf('flame', 15)} Autoanistia</button>
+        <button class="btn small" data-cmd="pow:action:fugir">${iconOf('plane', 15)} Preparar exílio</button>
+        <button class="btn small" data-cmd="pow:action:renunciar">${iconOf('door-open', 15)} Renunciar</button>
       </div>
     </div>
   `;
@@ -145,16 +146,16 @@ registerCommands({
         if (!confirm('Renunciar ao cargo? O jogo continua, mas você volta a ser cidadão.')) return;
         st.role = 'cidadao';
         st.legacy.daysInPower = st.legacy.daysInPower || 0;
-        toast('Você renunciou.', 'warn', '🚪');
+        toast('Você renunciou.', 'warn', 'door-open');
         app.save(); app.render();
         return;
       }
-      if (!a.allowed) { toast(a.cooldown > 0 ? `Recarrega em ${a.cooldown} mês(es)` : 'Requisitos não atendidos', 'warn', '⚠️'); sfx('bad'); return; }
-      if (!a.afford.ok) { toast(a.afford.reason, 'warn', '⚠️'); sfx('bad'); return; }
+      if (!a.allowed) { toast(a.cooldown > 0 ? `Recarrega em ${a.cooldown} mês(es)` : 'Requisitos não atendidos', 'warn', 'triangle-alert'); sfx('bad'); return; }
+      if (!a.afford.ok) { toast(a.afford.reason, 'warn', 'triangle-alert'); sfx('bad'); return; }
       const res = performAction(st, arg);
-      if (!res.ok) { toast(res.reason, 'warn', '⚠️'); sfx('bad'); return; }
+      if (!res.ok) { toast(res.reason, 'warn', 'triangle-alert'); sfx('bad'); return; }
       sfx('good');
-      toast(`${a.action.icon} ${a.action.name}`, 'good', a.action.icon);
+      toast(`${iconOf(a.action.icon, 15)} ${a.action.name}`, 'good', a.action.icon);
       app.save();
       app.render();
       if (st.over) { app.screen = 'gameover'; app.render(); }

@@ -38,6 +38,28 @@ jobs:
       - name: Aplicar ícones
         run: node scripts/native-icons.cjs
 
+      - name: Forçar tela cheia em paisagem
+        run: |
+          node -e "
+          const fs=require('fs');
+          const p='android/app/src/main/AndroidManifest.xml';
+          if (!fs.existsSync(p)) process.exit(0);
+          let s=fs.readFileSync(p,'utf8');
+          s=s.replace(/android:screenOrientation=\"[^\"]*\"/g, 'android:screenOrientation=\"sensorLandscape\"');
+          if (!/android:screenOrientation/.test(s)) {
+            s=s.replace(/<activity/, '<activity android:screenOrientation=\"sensorLandscape\"');
+          }
+          fs.writeFileSync(p,s);
+          const st='android/app/src/main/res/values/styles.xml';
+          if (fs.existsSync(st)) {
+            let x=fs.readFileSync(st,'utf8');
+            x=x.replace(/<item name=\"android:windowFullscreen\">.*<\/item>/g,'');
+            x=x.replace('</style>', '    <item name=\"android:windowFullscreen\">true</item>\n  </style>');
+            fs.writeFileSync(st,x);
+          }
+          "
+
+
       - name: Ajustar nome e versão
         run: |
           node -e "
@@ -46,7 +68,7 @@ jobs:
           if (fs.existsSync(p)) {
             let s=fs.readFileSync(p,'utf8');
             s=s.replace(/versionCode\s+\d+/, 'versionCode 1');
-            s=s.replace(/versionName\s+\"[^\"]*\"/, 'versionName \"1.0.0\"');
+            s=s.replace(/versionName\s+\"[^\"]*\"/, 'versionName \"2.0.0\"');
             fs.writeFileSync(p,s);
           }
           const strings='android/app/src/main/res/values/strings.xml';
@@ -67,21 +89,21 @@ jobs:
       - name: Renomear e coletar APK
         run: |
           mkdir -p dist
-          find android/app/build/outputs/apk -name '*.apk' -exec cp {} dist/NationZero-1.0.0.apk \;
+          find android/app/build/outputs/apk -name '*.apk' -exec cp {} dist/NationZero-2.0.0.apk \;
           ls -la dist
           ls -la dist/*.apk
 
       - uses: actions/upload-artifact@v4
         with:
           name: NationZero-APK
-          path: dist/NationZero-1.0.0.apk
+          path: dist/NationZero-2.0.0.apk
           retention-days: 90
 
       - name: Publicar na release (tags)
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/NationZero-1.0.0.apk
+          files: dist/NationZero-2.0.0.apk
           tag_name: ${{ github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

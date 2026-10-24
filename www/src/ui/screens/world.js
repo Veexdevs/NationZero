@@ -6,6 +6,7 @@ import { esc, barColor, sfx, toast } from '../dom.js';
 import { statCard, meter, emptyState } from '../parts.js';
 import { registerCommands } from '../registry.js';
 import { showTargetModal } from '../modals.js';
+import { iconOf } from '../icons.js';
 
 export function renderWorld(app) {
   const st = app.state;
@@ -18,12 +19,12 @@ export function renderWorld(app) {
   return `
     <div class="screen-head">
       <div>
-        <h2 class="screen-title">🌐 Mundo</h2>
+        <h2 class="screen-title">${iconOf('globe', 15)} Mundo</h2>
         <p class="screen-sub">Dez nações observam seu governo. Compre aliados, isole inimigos, ou declare guerra.</p>
       </div>
       <div class="flex gap-8 wrap">
-        <span class="pill ${st.stats.sancoes > 20 ? 'bad' : 'good'}">🚫 Sanções ${Math.round(st.stats.sancoes)}</span>
-        <span class="pill info">🌐 Reputação ${Math.round(st.stats.reputacao)}</span>
+        <span class="pill ${st.stats.sancoes > 20 ? 'bad' : 'good'}">${iconOf('ban', 15)} Sanções ${Math.round(st.stats.sancoes)}</span>
+        <span class="pill info">${iconOf('globe', 15)} Reputação ${Math.round(st.stats.reputacao)}</span>
       </div>
     </div>
 
@@ -62,7 +63,7 @@ export function renderWorld(app) {
     <div class="section-title">${c.flag} ${esc(c.name)} — relações</div>
     <div class="grid cols-2">
       <div class="card">
-        <div class="card-title">🤝 Diplomacia <span class="sub">${esc(relationLabel(rel.relation).label)}</span></div>
+        <div class="card-title">${iconOf('handshake', 15)} Diplomacia <span class="sub">${esc(relationLabel(rel.relation).label)}</span></div>
         ${meter('Relação bilateral', rel.relation, { color: barColor(rel.relation) })}
         <div class="small muted mt-8" style="line-height:1.55">${esc(c.trait)}</div>
         <div class="section-title" style="margin-top:16px">Tratados</div>
@@ -71,31 +72,31 @@ export function renderWorld(app) {
             const signed = !!rel.treaties[k];
             return `
               <button class="chip ${signed ? 'active' : ''}" data-cmd="wld:treaty:${c.id}:${k}" title="${esc(t.desc)}">
-                ${t.icon} ${esc(t.label)} ${signed ? '✓' : ''}
+                ${iconOf(t.icon, 15)} ${esc(t.label)} ${signed ? 'check' : ''}
               </button>`;
           }).join('')}
         </div>
         <div class="flex gap-8 wrap mt-14">
-          <button class="btn small" data-cmd="wld:gift:${c.id}:40">💵 Ajuda N$ 40 bi</button>
-          <button class="btn small" data-cmd="wld:gift:${c.id}:100">💵 Ajuda N$ 100 bi</button>
-          <button class="btn small danger" data-cmd="wld:sanction:${c.id}">🚫 Sancionar</button>
+          <button class="btn small" data-cmd="wld:gift:${c.id}:40">${iconOf('banknote', 15)} Ajuda N$ 40 bi</button>
+          <button class="btn small" data-cmd="wld:gift:${c.id}:100">${iconOf('banknote', 15)} Ajuda N$ 100 bi</button>
+          <button class="btn small danger" data-cmd="wld:sanction:${c.id}">${iconOf('ban', 15)} Sancionar</button>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">🕵️ Operações e força</div>
+        <div class="card-title">${iconOf('user-search', 15)} Operações e força</div>
         <p class="small muted" style="margin-bottom:12px;line-height:1.55">
           Espionagem, sabotagem e guerra. Cada operação pode ser descoberta — e cada descoberta tem preço diplomático.
         </p>
         <div class="grid" style="gap:8px">
-          <button class="btn small" data-cmd="wld:spy:${c.id}:espionar_pais">🕵️ Espionar país</button>
-          <button class="btn small" data-cmd="wld:spy:${c.id}:sabotar">💣 Sabotar economia</button>
-          <button class="btn small" data-cmd="wld:spy:${c.id}:desinformar">📡 Desinformação</button>
-          <button class="btn small" data-cmd="wld:spy:${c.id}:comprar_aliado">💼 Comprar aliado (N$ 60 bi)</button>
-          <button class="btn small" data-cmd="wld:spy:${c.id}:exportar_revolucao">🚩 Exportar revolução</button>
-          <button class="btn small danger" data-cmd="wld:spy:${c.id}:golpe_externo">🌍 Golpe no país</button>
-          <button class="btn small danger" data-cmd="wld:spy:${c.id}:assassinar">🎯 Eliminar líder</button>
-          <button class="btn small danger" data-cmd="wld:war:${c.id}">⚔️ Declarar guerra</button>
+          <button class="btn small" data-cmd="wld:spy:${c.id}:espionar_pais">${iconOf('user-search', 15)} Espionar país</button>
+          <button class="btn small" data-cmd="wld:spy:${c.id}:sabotar">${iconOf('bomb', 15)} Sabotar economia</button>
+          <button class="btn small" data-cmd="wld:spy:${c.id}:desinformar">${iconOf('radio-tower', 15)} Desinformação</button>
+          <button class="btn small" data-cmd="wld:spy:${c.id}:comprar_aliado">${iconOf('briefcase', 15)} Comprar aliado (N$ 60 bi)</button>
+          <button class="btn small" data-cmd="wld:spy:${c.id}:exportar_revolucao">${iconOf('flag', 15)} Exportar revolução</button>
+          <button class="btn small danger" data-cmd="wld:spy:${c.id}:golpe_externo">${iconOf('globe', 15)} Golpe no país</button>
+          <button class="btn small danger" data-cmd="wld:spy:${c.id}:assassinar">${iconOf('target', 15)} Eliminar líder</button>
+          <button class="btn small danger" data-cmd="wld:war:${c.id}">${iconOf('swords', 15)} Declarar guerra</button>
         </div>
       </div>
     </div>
@@ -105,7 +106,7 @@ export function renderWorld(app) {
 function renderWars(st) {
   return `
     <div class="card" style="border-color:rgba(255,93,108,.4);margin-bottom:14px">
-      <div class="card-title">⚔️ Guerras em curso</div>
+      <div class="card-title">${iconOf('swords', 15)} Guerras em curso</div>
       ${st.wars.map((w) => {
         const c = countryById(w.countryId);
         const progress = Math.max(-100, Math.min(100, w.progress));
@@ -144,9 +145,9 @@ registerCommands({
       const rel = st.relations[id];
       const signed = !!rel.treaties[treaty];
       const res = signed ? breakTreaty(st, id, treaty) : signTreaty(st, id, treaty);
-      if (!res.ok) { toast(res.reason, 'warn', '⚠️'); sfx('bad'); return; }
+      if (!res.ok) { toast(res.reason, 'warn', 'triangle-alert'); sfx('bad'); return; }
       sfx(signed ? 'warn' : 'good');
-      toast(signed ? `Tratado rompido com ${c.name}.` : `Tratado assinado com ${c.name}.`, signed ? 'warn' : 'good', '🤝');
+      toast(signed ? `Tratado rompido com ${c.name}.` : `Tratado assinado com ${c.name}.`, signed ? 'warn' : 'good', 'handshake');
       app.save(); app.render();
       return;
     }
@@ -154,7 +155,7 @@ registerCommands({
     if (action === 'gift') {
       const [id, amount] = arg.split(':');
       const res = giftCountry(st, id, Number(amount));
-      if (!res.ok) { toast(res.reason, 'warn', '⚠️'); return; }
+      if (!res.ok) { toast(res.reason, 'warn', 'triangle-alert'); return; }
       sfx('good');
       app.save(); app.render();
       return;
@@ -162,7 +163,7 @@ registerCommands({
 
     if (action === 'sanction') {
       const res = sanctionCountry(st, arg);
-      if (!res.ok) { toast(res.reason, 'warn', '⚠️'); return; }
+      if (!res.ok) { toast(res.reason, 'warn', 'triangle-alert'); return; }
       sfx('warn');
       app.save(); app.render();
       return;
@@ -174,11 +175,11 @@ registerCommands({
       const risky = ['assassinar', 'golpe_externo', 'sabotar'].includes(op);
       if (risky && !confirm(`Executar "${op}" contra ${c.name}? Se for descoberto, haverá crise diplomática.`)) return;
       const res = resolveEspionage(st, op, id);
-      if (!res.ok) { toast(res.reason, 'warn', '⚠️'); return; }
+      if (!res.ok) { toast(res.reason, 'warn', 'triangle-alert'); return; }
       st.cooldowns[op] = st.turn;
       sfx(res.success ? 'good' : 'bad');
-      toast(res.success ? `Operação em ${c.name}: sucesso.` : `Operação em ${c.name}: falhou.`, res.success ? 'good' : 'bad', '🕵️');
-      if (res.intel) setTimeout(() => toast(`Intel: ${res.intel.join(' · ')}`, 'info', '📄', 6000), 400);
+      toast(res.success ? `Operação em ${c.name}: sucesso.` : `Operação em ${c.name}: falhou.`, res.success ? 'good' : 'bad', 'user-search');
+      if (res.intel) setTimeout(() => toast(`Intel: ${res.intel.join(' · ')}`, 'info', 'file-text', 6000), 400);
       app.save(); app.render();
       return;
     }
@@ -187,17 +188,17 @@ registerCommands({
       const c = countryById(arg);
       if (!confirm(`Declarar guerra a ${c.name}? Poder militar seu ${Math.round(st.stats.poderMilitar)} contra ${c.power}.`)) return;
       const res = declareWar(st, arg);
-      if (!res.ok) { toast(res.reason, 'warn', '⚠️'); return; }
+      if (!res.ok) { toast(res.reason, 'warn', 'triangle-alert'); return; }
       sfx('bad');
-      toast(`Guerra declarada contra ${c.name}.`, 'bad', '⚔️');
+      toast(`Guerra declarada contra ${c.name}.`, 'bad', 'swords');
       app.save(); app.render();
       return;
     }
 
     if (action === 'peace') {
       const res = peaceTreaty(st, arg);
-      if (!res.ok) { toast(res.reason, 'warn', '⚠️'); return; }
-      toast(res.text, 'info', '🕊️');
+      if (!res.ok) { toast(res.reason, 'warn', 'triangle-alert'); return; }
+      toast(res.text, 'info', 'feather');
       app.save(); app.render();
     }
   },

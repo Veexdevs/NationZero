@@ -7,6 +7,7 @@ import { emptyState } from '../parts.js';
 import { registerCommands } from '../registry.js';
 import { toast, sfx } from '../dom.js';
 import { showPartyModal, showSpeechModal, showCoupModal, showPurgeModal, showTargetModal, showPlebisciteModal } from '../modals.js';
+import { iconOf } from '../icons.js';
 
 const DIALOG_HANDLERS = {
   party_create: (app) => showPartyModal(app, () => app.render()),
@@ -26,7 +27,7 @@ export function renderActions(app) {
   return `
     <div class="screen-head">
       <div>
-        <h2 class="screen-title">⚡ Ações</h2>
+        <h2 class="screen-title">${iconOf('zap', 15)} Ações</h2>
         <p class="screen-sub">O que você faz com o poder. Golpes, purgas, espionagem, guerra, discursos e articulação política.</p>
       </div>
       <span class="pill info">${ready} disponíveis agora</span>
@@ -34,23 +35,23 @@ export function renderActions(app) {
 
     <div class="subtabs">
       ${Object.entries(ACTION_CATEGORIES).map(([k, c]) => `
-        <button class="chip ${cat === k ? 'active' : ''}" data-cmd="act:cat:${k}" title="${esc(c.desc)}">${c.icon} ${esc(c.label)}</button>`).join('')}
+        <button class="chip ${cat === k ? 'active' : ''}" data-cmd="act:cat:${k}" title="${esc(c.desc)}">${iconOf(c.icon, 15)} ${esc(c.label)}</button>`).join('')}
     </div>
 
     ${items.length ? `
       <div class="grid cols-2">
         ${items.map(({ action, cooldown, allowed, afford }) => renderActionCard(st, action, cooldown, allowed, afford)).join('')}
-      </div>` : emptyState('🗂️', 'Nenhuma ação nesta categoria para o seu cargo atual.')}
+      </div>` : emptyState('folder', 'Nenhuma ação nesta categoria para o seu cargo atual.')}
   `;
 }
 
 function renderActionCard(st, action, cooldown, allowed, afford) {
   const cost = actionCost(st, action);
   const costParts = [];
-  if (cost.influencia) costParts.push(`🤝 ${cost.influencia}`);
-  if (cost.poder) costParts.push(`⚡ ${cost.poder}`);
-  if (cost.tesouro) costParts.push(`💰 ${cost.tesouro}`);
-  if (cost.lealdadeMilitarMin) costParts.push(`🪖 lealdade ≥ ${cost.lealdadeMilitarMin}`);
+  if (cost.influencia) costParts.push(`${iconOf('handshake', 15)} ${cost.influencia}`);
+  if (cost.poder) costParts.push(`${iconOf('zap', 15)} ${cost.poder}`);
+  if (cost.tesouro) costParts.push(`${iconOf('coins', 15)} ${cost.tesouro}`);
+  if (cost.lealdadeMilitarMin) costParts.push(`${iconOf('shield', 15)} lealdade ≥ ${cost.lealdadeMilitarMin}`);
 
   const reason = !allowed
     ? (cooldown > 0 ? `Recarrega em ${cooldown} mês(es)` : 'Requisitos não atendidos')
@@ -61,7 +62,7 @@ function renderActionCard(st, action, cooldown, allowed, afford) {
   return `
     <div class="law ${allowed && afford.ok ? '' : 'dim-card'}">
       <div class="law-top">
-        <span class="law-ico">${action.icon}</span>
+        <span class="law-ico">${iconOf(action.icon, 15)}</span>
         <div style="flex:1;min-width:0">
           <div class="law-name">${esc(action.name)}</div>
           <div class="law-desc" style="margin-top:3px">${esc(action.desc)}</div>
@@ -92,9 +93,9 @@ registerCommands({
         return;
       }
       const res = performAction(st, arg);
-      if (!res.ok) { toast(res.reason, 'warn', '⚠️'); sfx('bad'); return; }
+      if (!res.ok) { toast(res.reason, 'warn', 'triangle-alert'); sfx('bad'); return; }
       sfx('good');
-      toast(`${a.icon} ${a.name}`, 'good', a.icon);
+      toast(`${iconOf(a.icon, 15)} ${a.name}`, 'good', a.icon);
       app.save();
       app.render();
       if (st.over) { app.screen = 'gameover'; app.render(); }

@@ -6,6 +6,7 @@ import { esc, barColor, sfx, toast } from '../dom.js';
 import { parliamentBar, factionRows, meter, seatsLabel, rolePill } from '../parts.js';
 import { registerCommands } from '../registry.js';
 import { showPartyModal, showElectionModal } from '../modals.js';
+import { iconOf } from '../icons.js';
 
 export function renderPolitics(app) {
   const st = app.state;
@@ -17,7 +18,7 @@ export function renderPolitics(app) {
   return `
     <div class="screen-head">
       <div>
-        <h2 class="screen-title">🗳️ Política</h2>
+        <h2 class="screen-title">${iconOf('vote', 15)} Política</h2>
         <p class="screen-sub">Partido, carreira, eleições e o Congresso. Todo poder começa com organização.</p>
       </div>
       <div class="flex gap-8 wrap">${rolePill(st)} ${seatsLabel(st)}</div>
@@ -27,51 +28,51 @@ export function renderPolitics(app) {
 
     <div class="grid cols-2 mt-14">
       <div class="card">
-        <div class="card-title">🗳️ Próxima eleição <span class="sub">${next} meses</span></div>
+        <div class="card-title">${iconOf('vote', 15)} Próxima eleição <span class="sub">${next} meses</span></div>
         <p class="small muted" style="margin-bottom:10px">Estimativa de votos com o cenário atual. Campanhas, aprovação e bases mudam tudo.</p>
         ${f.parties.map((p) => {
           const color = p.npc ? '#7c8f89' : (st.party?.color || '#19e08a');
           return `
             <div class="faction-row">
-              <span class="fi">${p.npc ? '🏛️' : '⭐'}</span>
+              <span class="fi">${p.npc ? 'landmark' : 'star'}</span>
               <span class="fn">${esc(p.sigla)} ${p.npc ? '' : '<b>(você)</b>'}</span>
               <span class="ft" style="width:100px"><i style="width:${(p.share * 100).toFixed(0)}%;background:${color}"></i></span>
               <span class="fv" style="width:42px">${(p.share * 100).toFixed(0)}%</span>
             </div>`;
         }).join('')}
         <div class="flex gap-8 wrap mt-14">
-          <button class="btn small" data-cmd="pol:snap">⚡ Eleições antecipadas</button>
-          ${st.party ? '<button class="btn small" data-cmd="pol:action:comicio">📣 Comício</button>' : ''}
+          <button class="btn small" data-cmd="pol:snap">${iconOf('zap', 15)} Eleições antecipadas</button>
+          ${st.party ? `<button class="btn small" data-cmd="pol:action:comicio">${iconOf('megaphone', 15)} Comício</button>` : ''}
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">🧮 Integridade eleitoral</div>
+        <div class="card-title">${iconOf('calculator', 15)} Integridade eleitoral</div>
         ${meter('Controle do sistema eleitoral', st.institutions.eleitoral, { color: barColor(st.institutions.eleitoral) })}
         <p class="small muted mt-8" style="line-height:1.55">
           Controlar o sistema eleitoral aumenta seus votos — e destrói a legitimidade no exterior.
         </p>
         <div class="flex gap-8 wrap mt-14">
-          <button class="btn small" data-cmd="pol:rig:0">🧼 Eleição limpa</button>
-          <button class="btn small" data-cmd="pol:rig:1">🧮 Manipulação leve</button>
-          <button class="btn small danger" data-cmd="pol:rig:2">🎭 Fraude ampla</button>
+          <button class="btn small" data-cmd="pol:rig:0">${iconOf('droplets', 15)} Eleição limpa</button>
+          <button class="btn small" data-cmd="pol:rig:1">${iconOf('calculator', 15)} Manipulação leve</button>
+          <button class="btn small danger" data-cmd="pol:rig:2">${iconOf('drama', 15)} Fraude ampla</button>
         </div>
-        <div class="tiny muted mt-8">${st.flags.congresso_fechado ? '⚠️ Congresso fechado: resultados são ignorados.' : ''}</div>
+        <div class="tiny muted mt-8">${st.flags.congresso_fechado ? `${iconOf('triangle-alert', 15)} Congresso fechado: resultados são ignorados.` : ''}</div>
       </div>
     </div>
 
     <div class="grid cols-2 mt-14">
       <div class="card">
-        <div class="card-title">🏛️ Congresso <span class="sub">${totalSeats(st)} cadeiras</span></div>
-        ${st.flags.congresso_fechado ? '<div class="empty"><span class="eico">🔒</span>Congresso fechado por decreto.</div>' : parliamentBar(st)}
+        <div class="card-title">${iconOf('landmark', 15)} Congresso <span class="sub">${totalSeats(st)} cadeiras</span></div>
+        ${st.flags.congresso_fechado ? `<div class="empty"><span class="eico">${iconOf('lock', 15)}</span>Congresso fechado por decreto.</div>` : parliamentBar(st)}
         <div class="small muted mt-14" style="line-height:1.6">
           Maioria = ${Math.floor(totalSeats(st) / 2) + 1} cadeiras.
-          ${playerSeats(st) > totalSeats(st) / 2 ? ' ✅ Você tem maioria e pode aprovar quase tudo.' : ' Sem maioria, leis radicais ficam travadas.'}
+          ${playerSeats(st) > totalSeats(st) / 2 ? ` ${iconOf('check', 15)} Você tem maioria e pode aprovar quase tudo.` : ' Sem maioria, leis radicais ficam travadas.'}
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">🪜 Sua carreira</div>
+        <div class="card-title">${iconOf('arrow-up', 15)} Sua carreira</div>
         ${renderCareer(st)}
       </div>
     </div>
@@ -81,16 +82,16 @@ export function renderPolitics(app) {
       ${campaignActions.map(({ action, cooldown, allowed, afford }) => `
         <div class="law">
           <div class="law-top">
-            <span class="law-ico">${action.icon}</span>
+            <span class="law-ico">${iconOf(action.icon, 15)}</span>
             <div style="flex:1">
               <div class="law-name">${esc(action.name)}</div>
               <div class="law-desc">${esc(action.desc)}</div>
             </div>
           </div>
           <div class="law-foot">
-            ${action.cost?.influencia ? `<span class="law-cost">🤝 ${action.cost.influencia}</span>` : ''}
-            ${action.cost?.tesouro ? `<span class="law-cost">💰 ${action.cost.tesouro}</span>` : ''}
-            ${action.cost?.poder ? `<span class="law-cost">⚡ ${action.cost.poder}</span>` : ''}
+            ${action.cost?.influencia ? `<span class="law-cost">${iconOf('handshake', 15)} ${action.cost.influencia}</span>` : ''}
+            ${action.cost?.tesouro ? `<span class="law-cost">${iconOf('coins', 15)} ${action.cost.tesouro}</span>` : ''}
+            ${action.cost?.poder ? `<span class="law-cost">${iconOf('zap', 15)} ${action.cost.poder}</span>` : ''}
             <div style="flex:1"></div>
             ${allowed && afford.ok
               ? `<button class="btn tiny primary" data-cmd="pol:action:${action.id}">Fazer</button>`
@@ -100,7 +101,7 @@ export function renderPolitics(app) {
     </div>
 
     <div class="card mt-14">
-      <div class="card-title">🤝 Bases e eleitorado</div>
+      <div class="card-title">${iconOf('handshake', 15)} Bases e eleitorado</div>
       <div class="grid cols-2">
         <div>${factionRows(st)}</div>
         <div>
@@ -123,7 +124,7 @@ export function renderPolitics(app) {
 function renderNoPartyCard(st) {
   return `
     <div class="card" style="border-color:rgba(25,224,138,.3);background:rgba(25,224,138,.05)">
-      <div class="card-title">🎩 Você não tem partido</div>
+      <div class="card-title">${iconOf('hat-glasses', 15)} Você não tem partido</div>
       <p class="small muted" style="line-height:1.6;margin-bottom:12px">
         Sem partido, você não disputa eleições nem aprova leis no Congresso.
         Funde o seu: escolha nome, sigla, cor, símbolo e ideologia.
@@ -164,13 +165,13 @@ function renderCareer(st) {
     const current = st.role === k || (k === 'presidente' && (st.role === 'ditador' || st.role === 'monarca'));
     return `
       <div class="row" style="margin-bottom:6px;${current ? 'border-color:rgba(25,224,138,.45);background:rgba(25,224,138,.07)' : done ? '' : 'opacity:.55'}">
-        <span class="ico">${r.icon}</span>
+        <span class="ico">${iconOf(r.icon, 15)}</span>
         <div class="body"><div class="name">${esc(r.label)}</div><div class="desc">${esc(r.desc)}</div></div>
-        <div class="right">${current ? '<span class="pill good" style="font-size:10px">agora</span>' : done ? '<span class="tiny" style="color:var(--good)">✓</span>' : ''}</div>
+        <div class="right">${current ? '<span class="pill good" style="font-size:10px">agora</span>' : done ? `<span class="tiny" style="color:var(--good)">${iconOf('check', 15)}</span>` : ''}</div>
       </div>`;
   }).join('') + (
     (st.role === 'ditador' || st.role === 'monarca')
-      ? `<div class="pill warn mt-8">${ROLES[st.role].icon} ${esc(ROLES[st.role].label)} — acima da hierarquia</div>`
+      ? `<div class="pill warn mt-8">${iconOf(ROLES[st.role].icon, 14)} ${esc(ROLES[st.role].label)} — acima da hierarquia</div>`
       : ''
   );
 }
@@ -181,7 +182,7 @@ registerCommands({
     const st = app.state;
     if (action === 'create_party') { sfx('click'); showPartyModal(app, () => app.render()); return; }
     if (action === 'snap') {
-      if (!st.party) { toast('Funde um partido primeiro', 'warn', '🎩'); return; }
+      if (!st.party) { toast('Funde um partido primeiro', 'warn', 'hat-glasses'); return; }
       if (!confirm('Convocar eleições antecipadas agora? Pode ganhar ou perder o cargo.')) return;
       const res = runElection(st);
       sfx(res.won ? 'epic' : 'bad');
@@ -192,12 +193,12 @@ registerCommands({
     if (action === 'rig') {
       const level = Number(arg);
       const cost = level === 0 ? 0 : level === 1 ? 8 : 20;
-      if (st.stats.poder < cost) { toast(`Poder insuficiente (${cost})`, 'warn', '⚠️'); return; }
+      if (st.stats.poder < cost) { toast(`Poder insuficiente (${cost})`, 'warn', 'triangle-alert'); return; }
       if (level > 0 && !confirm(level === 2 ? 'Fraude ampla? Isso destrói sua legitimidade internacional.' : 'Manipulação leve do processo eleitoral?')) return;
       st.stats.poder = clamp(st.stats.poder - cost, 0, 100);
       rigElections(st, level);
       sfx(level ? 'warn' : 'good');
-      toast(level ? 'Sistema eleitoral manipulado.' : 'Processo eleitoral limpo.', level ? 'warn' : 'good', '🧮');
+      toast(level ? 'Sistema eleitoral manipulado.' : 'Processo eleitoral limpo.', level ? 'warn' : 'good', 'calculator');
       app.save(); app.render();
       return;
     }
@@ -220,12 +221,12 @@ registerCommands({
         }
         return;
       }
-      if (!entry.allowed) { toast(entry.cooldown > 0 ? `Recarrega em ${entry.cooldown}m` : 'Requisitos não atendidos', 'warn', '⚠️'); return; }
-      if (!entry.afford.ok) { toast(entry.afford.reason, 'warn', '⚠️'); return; }
+      if (!entry.allowed) { toast(entry.cooldown > 0 ? `Recarrega em ${entry.cooldown}m` : 'Requisitos não atendidos', 'warn', 'triangle-alert'); return; }
+      if (!entry.afford.ok) { toast(entry.afford.reason, 'warn', 'triangle-alert'); return; }
       const res = performAction(st, arg);
-      if (!res.ok) { toast(res.reason, 'warn', '⚠️'); return; }
+      if (!res.ok) { toast(res.reason, 'warn', 'triangle-alert'); return; }
       sfx('good');
-      toast(`${entry.action.icon} ${entry.action.name}`, 'good', entry.action.icon);
+      toast(`${iconOf(entry.action.icon, 15)} ${entry.action.name}`, 'good', entry.action.icon);
       app.save(); app.render();
     }
   },

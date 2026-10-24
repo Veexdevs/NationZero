@@ -10,6 +10,8 @@ import { resolveEventChoice } from '../engine/simulation.js';
 import { createParty, giveSpeech, resolveCoup, coupOdds, resolvePurge, PURGE_TARGETS } from '../engine/politics.js';
 import { ensureRelations, relationLabel, resolveEspionage, declareWar, peaceTreaty, giftCountry } from '../engine/world.js';
 import { countryById } from '../engine/world.js';
+import { exportCampaign, importCampaign, clearCampaign } from '../engine/campaign.js';
+import { iconOf } from './icons.js';
 
 /* ------------------------------------------------------------------ */
 /* Eventos                                                             */
@@ -20,7 +22,7 @@ export function showEventModal(app, eventId, onDone) {
   if (!event) { onDone && onDone(); return; }
   openModal(`
     <div class="modal-head event-modal">
-      <div class="modal-ico">${event.icon}</div>
+      <div class="modal-ico">${iconOf(event.icon, 15)}</div>
       <div>
         <div class="modal-tag">Evento · ${esc(dateLabel(app.state))}</div>
         <div class="modal-title">${esc(event.title)}</div>
@@ -30,7 +32,7 @@ export function showEventModal(app, eventId, onDone) {
     <div class="modal-choices">
       ${event.choices.map((c, i) => `
         <button class="choice" data-evt-choice="${i}">
-          <span class="cico">${c.icon || '▸'}</span>
+          <span class="cico">${c.icon || 'circle-dot'}</span>
           <span style="flex:1">
             <span class="ct">${esc(c.label)}</span>
             ${c.hint ? `<span class="cd">${esc(c.hint)}</span>` : ''}
@@ -72,7 +74,7 @@ export function showElectionModal(app, result, onDone) {
   const st = app.state;
   openModal(`
     <div class="modal-head">
-      <div class="modal-ico">${won ? '🎖️' : '🗳️'}</div>
+      <div class="modal-ico">${won ? 'medal' : 'vote'}</div>
       <div>
         <div class="modal-tag">Eleições · ${esc(result.date)}</div>
         <div class="modal-title">${won ? 'Você venceu a eleição!' : 'Resultado das eleições'}</div>
@@ -89,7 +91,7 @@ export function showElectionModal(app, result, onDone) {
       const color = p.npc ? '#7c8f89' : (st.party?.color || '#19e08a');
       return `
         <div class="faction-row">
-          <span class="fi">${p.npc ? '🏛️' : '⭐'}</span>
+          <span class="fi">${p.npc ? 'landmark' : 'star'}</span>
           <span class="fn">${esc(p.sigla)} ${p.npc ? '' : '(você)'}</span>
           <span class="ft" style="width:120px"><i style="width:${(p.seats / total) * 100}%;background:${color}"></i></span>
           <span class="fv" style="width:44px">${p.seats}</span>
@@ -120,7 +122,7 @@ export function showGameOver(app) {
   const over = st.over;
   openModal(`
     <div class="modal-head event-modal">
-      <div class="modal-ico">${over.icon || '🏁'}</div>
+      <div class="modal-ico">${iconOf(over.icon || 'flag', 20)}</div>
       <div>
         <div class="modal-tag">Fim da linha</div>
         <div class="modal-title">${esc(over.title)}</div>
@@ -144,9 +146,11 @@ export function showGameOver(app) {
       root.querySelector('[data-close]').addEventListener('click', () => closeModal());
       root.querySelector('[data-newgame]').addEventListener('click', () => {
         closeModal();
-        clearSave();
-        app.state = null;
-        app.screen = 'setup';
+        clearCampaign();
+        app.camp = null;
+        app.ui.pickedIndex = null;
+        app.screen = 'picker';
+        app.built = false;
         app.render();
       });
     },
@@ -174,7 +178,7 @@ export function showPartyModal(app, onDone) {
 
   openModal(`
     <div class="modal-head">
-      <div class="modal-ico">🎩</div>
+      <div class="modal-ico">${iconOf('hat-glasses', 15)}</div>
       <div>
         <div class="modal-tag">Política</div>
         <div class="modal-title">Fundar seu partido</div>
@@ -246,7 +250,7 @@ export function showPartyModal(app, onDone) {
       root.querySelector('#party-create').addEventListener('click', () => {
         const name = root.querySelector('#party-name').value.trim();
         const sigla = root.querySelector('#party-sigla').value.trim().toUpperCase();
-        if (!name || !sigla) { toast('Preencha nome e sigla', 'warn', '⚠️'); return; }
+        if (!name || !sigla) { toast('Preencha nome e sigla', 'warn', 'triangle-alert'); return; }
         st.ideology = { ...st.ideology, ...ideo };
         createParty(st, {
           name, sigla, color: draft.color, symbol: draft.symbol,
@@ -255,7 +259,7 @@ export function showPartyModal(app, onDone) {
         st.party.ideology = { ...ideo };
         closeModal();
         sfx('epic');
-        toast(`Partido ${sigla} fundado!`, 'good', '🎩');
+        toast(`Partido ${sigla} fundado!`, 'good', 'hat-glasses');
         app.save();
         app.render();
         onDone && onDone();
@@ -272,14 +276,14 @@ export function showSpeechModal(app) {
   const st = app.state;
   openModal(`
     <div class="modal-head">
-      <div class="modal-ico">🎤</div>
+      <div class="modal-ico">${iconOf('mic', 15)}</div>
       <div><div class="modal-tag">Ação</div><div class="modal-title">Discurso à nação</div></div>
     </div>
     <div class="modal-text">Escolha o tema — e o tom. Um discurso bem calibrado move a opinião; um erro pode custar caro.</div>
     <div class="modal-choices">
       ${SPEECH_TOPICS.map((t) => `
         <button class="choice" data-topic="${t.id}">
-          <span class="cico">${t.icon}</span>
+          <span class="cico">${iconOf(t.icon, 15)}</span>
           <span style="flex:1"><span class="ct">${esc(t.label)}</span>
           <span class="cd">${Object.entries(t.effect.factions || {}).map(([k, v]) => `${k} ${v > 0 ? '+' : ''}${v}`).join(' · ') || 'Efeito geral'}</span></span>
         </button>`).join('')}
@@ -296,7 +300,7 @@ export function showSpeechModal(app) {
         st.cooldowns.discurso = st.turn;
         closeModal();
         sfx('good');
-        toast('Discurso transmitido em rede nacional.', 'info', '🎤');
+        toast('Discurso transmitido em rede nacional.', 'info', 'mic');
         app.save();
         app.render();
       }));
@@ -313,9 +317,9 @@ export function showCoupModal(app, actionId) {
   const type = actionId === 'autogolpe' ? 'autogolpe' : actionId === 'proclamar_ditadura' ? 'proclamar' : 'militar';
   const chance = coupOdds(st, type);
   const titles = {
-    autogolpe: ['⚡', 'Autogolpe', 'Você está no poder — mas não no poder de verdade. Feche o Congresso, prenda os líderes da oposição e assuma.'],
-    militar: ['🪖', 'Golpe militar', 'Os quartéis estão inquietos. Com a lealdade certa, você pode convencê-los a tomar o palácio em seu nome.'],
-    proclamar: ['👑', 'Proclamar ditadura', 'Sem eleições, sem parlamento, sem desculpas. A história será escrita por você — ou contra você.'],
+    autogolpe: ['zap', 'Autogolpe', 'Você está no poder — mas não no poder de verdade. Feche o Congresso, prenda os líderes da oposição e assuma.'],
+    militar: ['shield', 'Golpe militar', 'Os quartéis estão inquietos. Com a lealdade certa, você pode convencê-los a tomar o palácio em seu nome.'],
+    proclamar: ['crown', 'Proclamar ditadura', 'Sem eleições, sem parlamento, sem desculpas. A história será escrita por você — ou contra você.'],
   };
   const [ico, title, text] = titles[type];
 
@@ -339,7 +343,7 @@ export function showCoupModal(app, actionId) {
     </div>
 
     <div class="modal-text" style="color:var(--danger);font-size:12.5px">
-      ⚠️ Se falhar: crise política imediata, perda de poder e — no pior cenário — prisão e deposição.
+      ${iconOf('triangle-alert', 15)} Se falhar: crise política imediata, perda de poder e — no pior cenário — prisão e deposição.
     </div>
     <div class="modal-actions">
       <button class="btn ghost" data-close>Recuar</button>
@@ -365,7 +369,7 @@ function showCoupResult(app, res) {
   const st = app.state;
   openModal(`
     <div class="modal-head event-modal">
-      <div class="modal-ico">${res.success ? '👑' : '🚨'}</div>
+      <div class="modal-ico">${res.success ? 'crown' : 'siren'}</div>
       <div>
         <div class="modal-tag">${res.success ? 'Poder absoluto' : 'Fracasso'}</div>
         <div class="modal-title">${res.success ? 'O país é seu' : 'O golpe falhou'}</div>
@@ -401,7 +405,7 @@ export function showPurgeModal(app) {
   const st = app.state;
   openModal(`
     <div class="modal-head">
-      <div class="modal-ico">🗡️</div>
+      <div class="modal-ico">${iconOf('sword', 15)}</div>
       <div><div class="modal-tag">Poder</div><div class="modal-title">Purgar adversários</div></div>
     </div>
     <div class="modal-text">Escolha o alvo e o método. Quanto mais brutal, maior o medo — e o risco de vazamento.</div>
@@ -409,7 +413,7 @@ export function showPurgeModal(app) {
     <div class="field">
       <label>Alvo</label>
       <select class="input" id="purge-target">
-        ${PURGE_TARGETS.map((t) => `<option value="${t.id}">${t.icon} ${esc(t.label)} (risco ×${t.risk})</option>`).join('')}
+        ${PURGE_TARGETS.map((t) => `<option value="${t.id}">${iconOf(t.icon, 15)} ${esc(t.label)} (risco ×${t.risk})</option>`).join('')}
       </select>
     </div>
     <div class="field">
@@ -434,7 +438,7 @@ export function showPurgeModal(app) {
         st.cooldowns.purgar = st.turn;
         closeModal();
         sfx(res.success ? 'warn' : 'bad');
-        toast(res.success ? 'Purga executada sem vazamentos.' : 'A purga vazou! Crise política.', res.success ? 'warn' : 'bad', '🗡️');
+        toast(res.success ? 'Purga executada sem vazamentos.' : 'A purga vazou! Crise política.', res.success ? 'warn' : 'bad', 'sword');
         app.save();
         app.render();
         if (st.over) { app.screen = 'gameover'; app.render(); showGameOver(app); }
@@ -464,7 +468,7 @@ export function showTargetModal(app, actionId) {
   ensureRelations(st);
   openModal(`
     <div class="modal-head">
-      <div class="modal-ico">🌐</div>
+      <div class="modal-ico">${iconOf('globe', 15)}</div>
       <div><div class="modal-tag">Exterior</div><div class="modal-title">${esc(TARGET_LABEL[actionId] || 'Escolher alvo')}</div></div>
     </div>
     <div class="modal-text">Selecione o país-alvo.</div>
@@ -502,7 +506,7 @@ function handleTarget(app, actionId, countryId) {
   if (actionId === 'declarar_guerra') {
     openModal(`
       <div class="modal-head event-modal">
-        <div class="modal-ico">⚔️</div>
+        <div class="modal-ico">${iconOf('swords', 15)}</div>
         <div><div class="modal-tag">Guerra</div><div class="modal-title">Invadir ${esc(c.name)}?</div></div>
       </div>
       <div class="modal-text">
@@ -520,7 +524,7 @@ function handleTarget(app, actionId, countryId) {
           const res = declareWar(st, countryId);
           closeModal();
           sfx('bad');
-          toast(res.ok ? `Guerra contra ${c.name} declarada.` : res.reason, res.ok ? 'bad' : 'warn', '⚔️');
+          toast(res.ok ? `Guerra contra ${c.name} declarada.` : res.reason, res.ok ? 'bad' : 'warn', 'swords');
           app.save(); app.render();
         });
       },
@@ -531,11 +535,11 @@ function handleTarget(app, actionId, countryId) {
   const res = resolveEspionage(st, actionId, countryId);
   st.cooldowns[actionId] = st.turn;
   closeModal();
-  if (!res.ok) { toast(res.reason, 'warn', '⚠️'); return; }
+  if (!res.ok) { toast(res.reason, 'warn', 'triangle-alert'); return; }
   sfx(res.success ? 'good' : 'bad');
-  toast(res.success ? `${TARGET_LABEL[actionId]} em ${c.name}: sucesso.` : `${TARGET_LABEL[actionId]} em ${c.name}: falhou.`, res.success ? 'good' : 'bad', '🕵️');
+  toast(res.success ? `${TARGET_LABEL[actionId]} em ${c.name}: sucesso.` : `${TARGET_LABEL[actionId]} em ${c.name}: falhou.`, res.success ? 'good' : 'bad', 'user-search');
   if (res.intel) {
-    setTimeout(() => toast(`Intel: ${res.intel.join(' · ')}`, 'info', '📄', 6000), 400);
+    setTimeout(() => toast(`Intel: ${res.intel.join(' · ')}`, 'info', 'file-text', 6000), 400);
   }
   app.save();
   app.render();
@@ -548,23 +552,23 @@ function handleTarget(app, actionId, countryId) {
 export function showPlebisciteModal(app) {
   const st = app.state;
   const questions = [
-    { id: 'reeleicao', label: 'Permitir reeleição ilimitada', icon: '🔁', pass: { flags: { mandato_ilimitado: true } }, fail: { stats: { aprovacao: -3 } } },
-    { id: 'monarquia', label: 'Restaurar a monarquia', icon: '👑', pass: { set: { regime: 'monarquia', role: 'monarca' }, stats: { legitimidade: 8 } }, fail: { stats: { legitimidade: -4 } } },
-    { id: 'constituinte', label: 'Convocar assembleia constituinte', icon: '📜', pass: { flags: { nova_constituicao: true }, stats: { legitimidade: 10, estabilidade: 4 } }, fail: { stats: { estabilidade: -3 } } },
-    { id: 'privatizar', label: 'Privatizar as estatais', icon: '🏷️', pass: { treasury: 120, factions: { empresariado: 12 } }, fail: { factions: { trabalhadores: 6 } } },
-    { id: 'saida', label: 'Sair dos organismos internacionais', icon: '🚪', pass: { flags: { isolamento: true }, stats: { sancoes: 10, reputacao: -10 } }, fail: { stats: { reputacao: 3 } } },
+    { id: 'reeleicao', label: 'Permitir reeleição ilimitada', icon: 'repeat', pass: { flags: { mandato_ilimitado: true } }, fail: { stats: { aprovacao: -3 } } },
+    { id: 'monarquia', label: 'Restaurar a monarquia', icon: 'crown', pass: { set: { regime: 'monarquia', role: 'monarca' }, stats: { legitimidade: 8 } }, fail: { stats: { legitimidade: -4 } } },
+    { id: 'constituinte', label: 'Convocar assembleia constituinte', icon: 'scroll-text', pass: { flags: { nova_constituicao: true }, stats: { legitimidade: 10, estabilidade: 4 } }, fail: { stats: { estabilidade: -3 } } },
+    { id: 'privatizar', label: 'Privatizar as estatais', icon: 'tag', pass: { treasury: 120, factions: { empresariado: 12 } }, fail: { factions: { trabalhadores: 6 } } },
+    { id: 'saida', label: 'Sair dos organismos internacionais', icon: 'door-open', pass: { flags: { isolamento: true }, stats: { sancoes: 10, reputacao: -10 } }, fail: { stats: { reputacao: 3 } } },
   ];
 
   openModal(`
     <div class="modal-head">
-      <div class="modal-ico">🗳️</div>
+      <div class="modal-ico">${iconOf('vote', 15)}</div>
       <div><div class="modal-tag">Democracia direta</div><div class="modal-title">Convocar plebiscito</div></div>
     </div>
     <div class="modal-text">Leve uma decisão ao povo. Se o povo disser não, sua autoridade sai menor do que entrou.</div>
     <div class="modal-choices">
       ${questions.map((q) => `
         <button class="choice" data-q="${q.id}">
-          <span class="cico">${q.icon}</span>
+          <span class="cico">${iconOf(q.icon, 15)}</span>
           <span style="flex:1"><span class="ct">${esc(q.label)}</span></span>
         </button>`).join('')}
     </div>
@@ -581,12 +585,12 @@ export function showPlebisciteModal(app) {
         applyEffect(st, {
           ...eff,
           text: `Plebiscito "${q.label}": ${passed ? 'APROVADO' : 'REJEITADO'} com ${yes.toFixed(0)}% dos votos.`,
-          tone: passed ? 'good' : 'warn', icon: '🗳️',
+          tone: passed ? 'good' : 'warn', icon: 'vote',
         });
         st.cooldowns.plebiscito = st.turn;
         closeModal();
         sfx(passed ? 'good' : 'bad');
-        toast(`Plebiscito ${passed ? 'aprovado' : 'rejeitado'}: ${yes.toFixed(0)}% sim`, passed ? 'good' : 'warn', '🗳️');
+        toast(`Plebiscito ${passed ? 'aprovado' : 'rejeitado'}: ${yes.toFixed(0)}% sim`, passed ? 'good' : 'warn', 'vote');
         app.save(); app.render();
         if (st.over) { app.screen = 'gameover'; app.render(); showGameOver(app); }
       }));
@@ -601,7 +605,7 @@ export function showPlebisciteModal(app) {
 export function showHelp(app) {
   openModal(`
     <div class="modal-head">
-      <div class="modal-ico">📖</div>
+      <div class="modal-ico">${iconOf('book-open', 15)}</div>
       <div><div class="modal-tag">Manual do governante</div><div class="modal-title">Como jogar NationZero</div></div>
     </div>
     <div class="modal-text" style="line-height:1.7">
@@ -617,15 +621,15 @@ export function showHelp(app) {
 
     <div class="section-title">Recursos</div>
     <div class="small muted" style="line-height:1.8;margin-bottom:12px">
-      ⚡ <b>Poder</b> — capital político para golpes, purgas e decretos. Cresce com legitimidade e controle institucional.<br />
-      🤝 <b>Influência</b> — sua capacidade de articular. Gasta em leis, cargos e diplomacia.<br />
-      💰 <b>Tesouro</b> — dinheiro do Estado em bilhões. Ajuste impostos e gastos na aba Economia.<br />
-      👍 <b>Aprovação</b> — o povo. 👥 <b>Bases</b> — cada facção tem sua agenda. Agradar todos é impossível.
+      ${iconOf('zap', 15)} <b>Poder</b> — capital político para golpes, purgas e decretos. Cresce com legitimidade e controle institucional.<br />
+      ${iconOf('handshake', 15)} <b>Influência</b> — sua capacidade de articular. Gasta em leis, cargos e diplomacia.<br />
+      ${iconOf('coins', 15)} <b>Tesouro</b> — dinheiro do Estado em bilhões. Ajuste impostos e gastos na aba Economia.<br />
+      ${iconOf('thumbs-up', 15)} <b>Aprovação</b> — o povo. ${iconOf('users', 15)} <b>Bases</b> — cada facção tem sua agenda. Agradar todos é impossível.
     </div>
 
     <div class="section-title">Caminhos de carreira</div>
     <div class="small muted" style="line-height:1.8;margin-bottom:12px">
-      Cidadão → Ativista → fundar partido → eleger-se deputado → ministro → vice → presidente → e, se quiser, ditador ou monarca.<br />
+      Cidadão ${iconOf('arrow-right', 14)} Ativista ${iconOf('arrow-right', 15)} fundar partido ${iconOf('arrow-right', 14)} eleger-se deputado ${iconOf('arrow-right', 15)} ministro ${iconOf('arrow-right', 14)} vice ${iconOf('arrow-right', 15)} presidente ${iconOf('arrow-right', 14)} e, se quiser, ditador ou monarca.<br />
       Fora da política formal: golpe militar, autogolpe, revolução, teocracia, junta… Você escolhe.
     </div>
 
@@ -649,24 +653,24 @@ export function showSettings(app) {
   const soundOff = localStorage.getItem('nz.sound') === 'off';
   openModal(`
     <div class="modal-head">
-      <div class="modal-ico">⚙️</div>
+      <div class="modal-ico">${iconOf('cog', 15)}</div>
       <div><div class="modal-tag">Sistema</div><div class="modal-title">Ajustes</div></div>
     </div>
 
     <div class="row" style="margin-bottom:8px">
-      <span class="ico">${soundOff ? '🔇' : '🔊'}</span>
+      <span class="ico">${iconOf(soundOff ? 'volume-off' : 'volume-2', 16)}</span>
       <div class="body"><div class="name">Som</div><div class="desc">Efeitos sonoros de interface</div></div>
       <div class="right"><button class="btn small" data-sound="${soundOff ? 'on' : 'off'}">${soundOff ? 'Ligar' : 'Desligar'}</button></div>
     </div>
 
     <div class="row" style="margin-bottom:8px">
-      <span class="ico">💾</span>
+      <span class="ico">${iconOf('save', 15)}</span>
       <div class="body"><div class="name">Exportar save</div><div class="desc">Baixa um arquivo .json do seu país</div></div>
       <div class="right"><button class="btn small" data-export ${app.state ? '' : 'disabled'}>Exportar</button></div>
     </div>
 
     <div class="row" style="margin-bottom:8px">
-      <span class="ico">📥</span>
+      <span class="ico">${iconOf('download', 15)}</span>
       <div class="body"><div class="name">Importar save</div><div class="desc">Carrega um arquivo .json</div></div>
       <div class="right"><button class="btn small" data-import>Importar</button></div>
     </div>
@@ -674,7 +678,7 @@ export function showSettings(app) {
 
     ${app.state ? `
     <div class="row" style="margin-bottom:8px">
-      <span class="ico">🔄</span>
+      <span class="ico">${iconOf('refresh-cw', 16)}</span>
       <div class="body"><div class="name">Recomeçar</div><div class="desc">Abandona o país atual e funda outro</div></div>
       <div class="right"><button class="btn small danger" data-restart>Recomeçar</button></div>
     </div>` : ''}
@@ -692,9 +696,9 @@ export function showSettings(app) {
         sfx('click');
       });
       root.querySelector('[data-export]')?.addEventListener('click', () => {
-        if (!app.state) return;
-        download(`nationzero-${app.state.meta.nationName.replace(/\s+/g, '-').toLowerCase()}.json`, exportState(app.state));
-        toast('Save exportado', 'good', '💾');
+        if (!app.camp) return;
+        download(`nationzero-${app.camp.state.meta.nationName.replace(/\s+/g, '-').toLowerCase()}.json`, exportCampaign(app.camp));
+        toast('Campanha exportada', 'good', 'save');
       });
       root.querySelector('[data-import]')?.addEventListener('click', () => {
         root.querySelector('#import-file').click();
@@ -704,22 +708,25 @@ export function showSettings(app) {
         if (!file) return;
         try {
           const text = await readFile(file);
-          const st = importState(text);
-          app.state = st;
-          app.screen = st.over ? 'gameover' : 'game';
+          app.camp = importCampaign(text);
+          app.screen = 'game';
+          app.built = false;
+          app.panelOpen = false;
           app.save();
           closeModal();
           app.render();
-          toast('Save importado', 'good', '📥');
+          toast('Campanha importada', 'good', 'download');
         } catch (err) {
-          toast('Arquivo inválido', 'bad', '⚠️');
+          toast('Arquivo inválido', 'bad', 'triangle-alert');
         }
       });
       root.querySelector('[data-restart]')?.addEventListener('click', () => {
         if (!confirm('Recomeçar do zero? O país atual será perdido.')) return;
-        clearSave();
-        app.state = null;
-        app.screen = 'setup';
+        clearCampaign();
+        app.camp = null;
+        app.ui.pickedIndex = null;
+        app.screen = 'picker';
+        app.built = false;
         closeModal();
         app.render();
       });
@@ -732,30 +739,30 @@ export function showSettings(app) {
 /* ------------------------------------------------------------------ */
 
 export const DECREE_PALETTE = [
-  { id: 'social', label: 'Pacote social emergencial', icon: '🤲', cost: 8, effect: { treasury: -40, stats: { aprovacao: 7, agitacao: -4, saude: 2 }, factions: { trabalhadores: 8, minorias: 6, financeiro: -4 } } },
-  { id: 'austeridade', label: 'Austeridade brutal', icon: '✂️', cost: 8, effect: { treasury: 60, stats: { aprovacao: -7, economia: -1, desemprego: 0.7 }, factions: { financeiro: 12, trabalhadores: -10 } } },
-  { id: 'militar', label: 'Militarização do Estado', icon: '🪖', cost: 10, effect: { stats: { repressao: 8, liberdades: -8, lealdadeMilitar: 6, medo: 6 }, factions: { militares: 12, juventude: -8, imprensa: -6 } } },
-  { id: 'abertura', label: 'Abertura democrática', icon: '🕊️', cost: 10, effect: { stats: { liberdades: 9, repressao: -6, agitacao: -5, reputacao: 5 }, factions: { imprensa: 10, juventude: 8, militares: -8 } } },
-  { id: 'propaganda', label: 'Ofensiva de propaganda', icon: '📺', cost: 8, effect: { stats: { legitimidade: 6, aprovacao: 2, liberdades: -3 }, factions: { imprensa: -6, nacionalistas: 6 } } },
-  { id: 'educacao', label: 'Choque educacional', icon: '🎓', cost: 8, effect: { treasury: -30, stats: { educacao: 5, tecnologia: 2 }, factions: { intelectuais: 8, juventude: 6 } } },
-  { id: 'censura', label: 'Censura total', icon: '🔇', cost: 12, effect: { stats: { liberdades: -10, medo: 8, repressao: 6 }, control: { midia: 10 }, factions: { imprensa: -14, intelectuais: -8 } } },
-  { id: 'impostos_up', label: 'Taxar os mais ricos', icon: '💎', cost: 8, effect: { treasury: 50, stats: { aprovacao: 3 }, factions: { financeiro: -12, trabalhadores: 8 } } },
-  { id: 'impostos_down', label: 'Cortar impostos', icon: '📉', cost: 8, effect: { treasury: -50, stats: { economia: 1 }, factions: { empresariado: 10, financeiro: 8, trabalhadores: -4 } } },
-  { id: 'anistia', label: 'Anistia ampla', icon: '🕯️', cost: 10, effect: { stats: { agitacao: -8, medo: -6, liberdades: 4, corrupcao: 3 }, factions: { imprensa: 4, militares: 2 } } },
-  { id: 'sitio', label: 'Estado de sítio', icon: '🚨', cost: 14, effect: { stats: { estabilidade: 8, liberdades: -12, repressao: 8, medo: 8 }, factions: { militares: 6, imprensa: -10 } } },
-  { id: 'nacionalismo', label: 'Campanha patriótica', icon: '🚩', cost: 8, effect: { stats: { estabilidade: 3, reputacao: -3 }, factions: { nacionalistas: 12, militares: 4, minorias: -4 } } },
+  { id: 'social', label: 'Pacote social emergencial', icon: 'hand-heart', cost: 8, effect: { treasury: -40, stats: { aprovacao: 7, agitacao: -4, saude: 2 }, factions: { trabalhadores: 8, minorias: 6, financeiro: -4 } } },
+  { id: 'austeridade', label: 'Austeridade brutal', icon: 'scissors', cost: 8, effect: { treasury: 60, stats: { aprovacao: -7, economia: -1, desemprego: 0.7 }, factions: { financeiro: 12, trabalhadores: -10 } } },
+  { id: 'militar', label: 'Militarização do Estado', icon: 'shield', cost: 10, effect: { stats: { repressao: 8, liberdades: -8, lealdadeMilitar: 6, medo: 6 }, factions: { militares: 12, juventude: -8, imprensa: -6 } } },
+  { id: 'abertura', label: 'Abertura democrática', icon: 'feather', cost: 10, effect: { stats: { liberdades: 9, repressao: -6, agitacao: -5, reputacao: 5 }, factions: { imprensa: 10, juventude: 8, militares: -8 } } },
+  { id: 'propaganda', label: 'Ofensiva de propaganda', icon: 'tv', cost: 8, effect: { stats: { legitimidade: 6, aprovacao: 2, liberdades: -3 }, factions: { imprensa: -6, nacionalistas: 6 } } },
+  { id: 'educacao', label: 'Choque educacional', icon: 'graduation-cap', cost: 8, effect: { treasury: -30, stats: { educacao: 5, tecnologia: 2 }, factions: { intelectuais: 8, juventude: 6 } } },
+  { id: 'censura', label: 'Censura total', icon: 'volume-off', cost: 12, effect: { stats: { liberdades: -10, medo: 8, repressao: 6 }, control: { midia: 10 }, factions: { imprensa: -14, intelectuais: -8 } } },
+  { id: 'impostos_up', label: 'Taxar os mais ricos', icon: 'gem', cost: 8, effect: { treasury: 50, stats: { aprovacao: 3 }, factions: { financeiro: -12, trabalhadores: 8 } } },
+  { id: 'impostos_down', label: 'Cortar impostos', icon: 'trending-down', cost: 8, effect: { treasury: -50, stats: { economia: 1 }, factions: { empresariado: 10, financeiro: 8, trabalhadores: -4 } } },
+  { id: 'anistia', label: 'Anistia ampla', icon: 'flame', cost: 10, effect: { stats: { agitacao: -8, medo: -6, liberdades: 4, corrupcao: 3 }, factions: { imprensa: 4, militares: 2 } } },
+  { id: 'sitio', label: 'Estado de sítio', icon: 'siren', cost: 14, effect: { stats: { estabilidade: 8, liberdades: -12, repressao: 8, medo: 8 }, factions: { militares: 6, imprensa: -10 } } },
+  { id: 'nacionalismo', label: 'Campanha patriótica', icon: 'flag', cost: 8, effect: { stats: { estabilidade: 3, reputacao: -3 }, factions: { nacionalistas: 12, militares: 4, minorias: -4 } } },
 ];
 
 export function showDecreeModal(app) {
   const st = app.state;
   openModal(`
     <div class="modal-head">
-      <div class="modal-ico">✍️</div>
+      <div class="modal-ico">${iconOf('pen-line', 15)}</div>
       <div><div class="modal-tag">Poder absoluto</div><div class="modal-title">Escrever um decreto</div></div>
     </div>
     <div class="modal-text">
       Nenhuma lei prevista — você inventa. Dê um nome ao decreto e escolha até <b>3 medidas</b>.
-      Libere as medidas com ⚡ Poder e 🤝 Influência.
+      Libere as medidas com ${iconOf('zap', 15)} Poder e ${iconOf('handshake', 15)} Influência.
     </div>
     <div class="field">
       <label>Nome do decreto</label>
@@ -771,9 +778,9 @@ export function showDecreeModal(app) {
         ${DECREE_PALETTE.map((d) => `
           <button class="law" data-decree="${d.id}" style="text-align:left;padding:10px 12px">
             <div class="law-top">
-              <span class="law-ico" style="font-size:16px">${d.icon}</span>
+              <span class="law-ico" style="font-size:16px">${iconOf(d.icon, 15)}</span>
               <div><div class="law-name" style="font-size:12.5px">${esc(d.label)}</div>
-              <div class="law-desc" style="font-size:10.5px">⚡ ${d.cost}</div></div>
+              <div class="law-desc" style="font-size:10.5px">iconOf('zap', 15) ${d.cost}</div></div>
             </div>
           </button>`).join('')}
       </div>
@@ -792,16 +799,16 @@ export function showDecreeModal(app) {
           const id = btn.getAttribute('data-decree');
           if (chosen.has(id)) { chosen.delete(id); btn.classList.remove('active'); }
           else {
-            if (chosen.size >= 3) { toast('Máximo de 3 medidas por decreto', 'warn', '⚠️'); return; }
+            if (chosen.size >= 3) { toast('Máximo de 3 medidas por decreto', 'warn', 'triangle-alert'); return; }
             chosen.add(id); btn.classList.add('active');
           }
         });
       });
       root.querySelector('#decree-go').addEventListener('click', () => {
-        if (!chosen.size) { toast('Escolha ao menos uma medida', 'warn', '⚠️'); return; }
+        if (!chosen.size) { toast('Escolha ao menos uma medida', 'warn', 'triangle-alert'); return; }
         const picks = [...chosen].map((id) => DECREE_PALETTE.find((d) => d.id === id));
         const totalCost = picks.reduce((a, p) => a + p.cost, 0);
-        if (st.stats.poder < totalCost) { toast(`Poder insuficiente (precisa ${totalCost})`, 'warn', '⚠️'); return; }
+        if (st.stats.poder < totalCost) { toast(`Poder insuficiente (precisa ${totalCost})`, 'warn', 'triangle-alert'); return; }
         st.stats.poder = clamp(st.stats.poder - totalCost, 0, 100);
         const name = root.querySelector('#decree-name').value.trim() || 'Decreto Executivo';
         const desc = root.querySelector('#decree-desc').value.trim();
@@ -817,14 +824,14 @@ export function showDecreeModal(app) {
         applyEffect(st, {
           stats: combined.stats, factions: combined.factions, control: combined.control, treasury: combined.treasury,
           text: `${name}${desc ? ` — "${desc}"` : ''}. Medidas: ${picks.map((p) => p.label).join(', ')}.`,
-          tone: 'warn', icon: '✍️',
+          tone: 'warn', icon: 'pen-line',
         });
         st.custom.push({ name, desc, picks: picks.map((p) => p.id), turn: st.turn, date: dateLabel(st) });
         st.legacy.lawsPassed = (st.legacy.lawsPassed || 0) + 1;
         st.cooldowns.decreto = st.turn;
         closeModal();
         sfx('epic');
-        toast(`Decreto publicado: ${name}`, 'warn', '✍️');
+        toast(`Decreto publicado: ${name}`, 'warn', 'pen-line');
         app.save();
         app.render();
       });
