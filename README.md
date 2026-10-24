@@ -62,6 +62,11 @@ npm run serve
 Também dá para instalar como aplicativo (PWA): no Chrome/Android use "Instalar aplicativo";
 no iPhone, Safari → Compartilhar → "Adicionar à Tela de Início". O jogo funciona **offline** depois de carregado.
 
+### 🌍 Jogar online (GitHub Pages)
+Depois de ativar em **Settings → Pages → Source: GitHub Actions**, cada push na `main` publica o jogo em:
+
+**https://veexdevs.github.io/NationZero/**
+
 ### Baixar os executáveis
 Os instaladores são gerados pelo GitHub Actions (não ficam versionados no repositório):
 
@@ -70,7 +75,7 @@ Os instaladores são gerados pelo GitHub Actions (não ficam versionados no repo
    - **Build Desktop (.exe / .dmg / .AppImage)** → baixe o artefato `NationZero-win`, `NationZero-mac` ou `NationZero-linux`.
    - **Build Android (.apk)** → baixe o artefato `NationZero-APK` (APK de debug, pronto para instalar).
    - **Build iOS (.ipa sem assinatura)** → baixe `NationZero-iOS-ipa`.
-3. Ou crie uma tag para gerar uma **release** com todos os arquivos juntos:
+3. Ou crie uma tag para gerar uma **release** com todos os arquivos juntos (o link fica permanente):
 
 ```bash
 git tag v1.0.0
