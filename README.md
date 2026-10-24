@@ -1,3 +1,5 @@
+![NationZero](build/banner.png)
+
 # 🏛️ NationZero
 
 **Um país inteiro nas suas mãos.** Você começa como um cidadão comum — e termina como quiser:

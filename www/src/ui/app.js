@@ -426,7 +426,7 @@ function bindShellInputs(app) {
 
   document.querySelectorAll('[data-slider]').forEach((input) => {
     input.addEventListener('input', () => {
-      const [, kind, key] = input.dataset.slider.split(':');
+      const [kind, key] = input.dataset.slider.split(':');
       const val = Number(input.value);
       if (kind === 'tax') st.taxes[key] = val;
       else if (kind === 'spend') st.spending[key] = val;

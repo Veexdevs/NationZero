@@ -32,8 +32,8 @@ export const ACTIONS = [
   {
     id: 'negociar_ministério', cat: 'politica', name: 'Negociar um ministério', icon: '🗂️', tier: 1,
     desc: 'Usa sua influência para ganhar uma pasta no governo.',
-    cost: { influencia: 28 }, cooldown: 12, repeatable: true,
-    require: { role: ['lider_partido', 'deputado'], stats: { influencia: 30 } },
+    cost: { influencia: 40 }, cooldown: 12, repeatable: true,
+    require: { role: ['lider_partido', 'deputado'], stats: { influencia: 30, aprovacao: 38 } },
     effect: {
       stats: { poder: 12, legitimidade: 6, influencia: -4 }, factions: { imprensa: 2 },
       set: { role: 'ministro' }, text: 'Você foi nomeado ministro de Estado.',
@@ -43,8 +43,8 @@ export const ACTIONS = [
   {
     id: 'articular_chapa', cat: 'politica', name: 'Articular a vice-presidência', icon: '🥈', tier: 2,
     desc: 'Entra na chapa presidencial como vice. A um passo do topo.',
-    cost: { influencia: 35, tesouro: 20 }, cooldown: 16, repeatable: true,
-    require: { role: ['ministro', 'deputado'], stats: { influencia: 45 } },
+    cost: { influencia: 50, tesouro: 25 }, cooldown: 16, repeatable: true,
+    require: { role: ['ministro', 'deputado'], stats: { influencia: 40, aprovacao: 46 } },
     effect: {
       stats: { poder: 15, legitimidade: 8 }, set: { role: 'vice' },
       text: 'Você é o novo vice-presidente. O palácio tem uma porta aberta.',

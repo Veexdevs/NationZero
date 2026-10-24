@@ -410,6 +410,8 @@ export function resolvePurge(state, targetId, styleId) {
 export function giveSpeech(state, topicId, intensity = 1) {
   const topic = SPEECH_TOPICS.find((t) => t.id === topicId) || SPEECH_TOPICS[0];
   const effect = JSON.parse(JSON.stringify(topic.effect));
+  // Rendimentos decrescentes: discursar muito para quem já te aprova convence cada vez menos
+  intensity *= clamp(1.15 - state.stats.aprovacao / 130, 0.35, 1.1);
   effect.stats = { ...(effect.stats || {}) };
   for (const k of Object.keys(effect.stats)) effect.stats[k] = Math.round(effect.stats[k] * intensity * 10) / 10;
   effect.text = `Discurso sobre "${topic.label}" transmitido em rede nacional.`;

@@ -101,6 +101,23 @@ ok(app.state.custom.length === 1, 'decreto personalizado publicado');
 M.showHelp(app); ok(click('[data-close]'), 'ajuda abre e fecha');
 M.showSettings(app); ok(click('[data-close]'), 'ajustes abrem e fecham');
 
+console.log('\n== Sliders de orçamento ==');
+app.tab = 'economy';
+app.render();
+const taxSlider = document.querySelector('[data-slider="tax:renda"]');
+ok(!!taxSlider, 'slider de imposto de renda existe');
+if (taxSlider) {
+  taxSlider.value = '42';
+  taxSlider.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  ok(app.state.taxes.renda === 42, `slider altera imposto (${app.state.taxes.renda})`);
+}
+const spendSlider = document.querySelector('[data-slider="spend:saude"]');
+if (spendSlider) {
+  spendSlider.value = '30';
+  spendSlider.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  ok(app.state.spending.saude === 30, `slider altera gasto (${app.state.spending.saude})`);
+}
+
 console.log('\n== Golpe, purga e plebiscito ==');
 Object.assign(app.state.stats, { lealdadeMilitar: 96, poder: 96 });
 app.state.institutions.militar = 92;
