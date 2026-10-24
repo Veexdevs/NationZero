@@ -1,5 +1,8 @@
 name: Build iOS (.ipa sem assinatura)
 
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
   push:
