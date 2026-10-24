@@ -1,8 +1,8 @@
 name: Publicar jogo online (GitHub Pages)
 
+# Requer: Settings → Pages → Source = "GitHub Actions" (uma única vez).
+# Depois disso, rode este workflow manualmente ou reative o gatilho de push.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
