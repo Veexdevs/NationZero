@@ -49,6 +49,20 @@ Tudo alimenta aprovação, estabilidade, agitação e o **risco de golpe contra 
 
 ---
 
+## ⬇️ Baixar agora
+
+**[➡️ Página de releases com todos os instaladores](https://github.com/Veexdevs/NationZero/releases/latest)**
+
+| Plataforma | Arquivo |
+|---|---|
+| 🪟 Windows | `NationZero-*-x64.exe` (instalador) · `NationZero-*-portable.exe` |
+| 🍎 macOS | `NationZero-*-x64.dmg` (Intel) · `NationZero-*-arm64.dmg` (Apple Silicon) |
+| 🐧 Linux | `NationZero-*-x86_64.AppImage` · `NationZero-*-amd64.deb` |
+| 🤖 Android | `NationZero-*.apk` |
+| 🍏 iOS | `NationZero-unsigned.ipa` (precisa de assinatura própria para instalar) |
+
+---
+
 ## 🚀 Jogar agora
 
 ### No navegador
