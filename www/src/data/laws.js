@@ -7,25 +7,25 @@
  */
 
 export const LAW_CATEGORIES = {
-  economia:    { label: 'Economia',          icon: '💰' },
-  trabalho:    { label: 'Trabalho',          icon: '🔧' },
-  saude:       { label: 'Saúde',             icon: '🏥' },
-  educacao:    { label: 'Educação',          icon: '🎓' },
-  seguranca:   { label: 'Segurança',         icon: '🚔' },
-  justica:     { label: 'Justiça',           icon: '⚖️' },
-  liberdade:   { label: 'Liberdades',        icon: '🕊️' },
-  cultura:     { label: 'Cultura & Nação',   icon: '🎭' },
-  ambiente:    { label: 'Meio ambiente',     icon: '🌳' },
-  tecnologia:  { label: 'Tecnologia',        icon: '🧪' },
-  militar:     { label: 'Defesa',            icon: '🎖️' },
-  mundo:       { label: 'Exterior',          icon: '🌐' },
-  constituicao:{ label: 'Constituição',      icon: '📜' },
+  economia:    { label: 'Economia',          icon: 'coins' },
+  trabalho:    { label: 'Trabalho',          icon: 'wrench' },
+  saude:       { label: 'Saúde',             icon: 'hospital' },
+  educacao:    { label: 'Educação',          icon: 'graduation-cap' },
+  seguranca:   { label: 'Segurança',         icon: 'badge' },
+  justica:     { label: 'Justiça',           icon: 'scale' },
+  liberdade:   { label: 'Liberdades',        icon: 'feather' },
+  cultura:     { label: 'Cultura & Nação',   icon: 'drama' },
+  ambiente:    { label: 'Meio ambiente',     icon: 'tree-deciduous' },
+  tecnologia:  { label: 'Tecnologia',        icon: 'flask-conical' },
+  militar:     { label: 'Defesa',            icon: 'medal' },
+  mundo:       { label: 'Exterior',          icon: 'globe' },
+  constituicao:{ label: 'Constituição',      icon: 'scroll-text' },
 };
 
 export const LAWS = [
   /* --------------------------- ECONOMIA --------------------------- */
   {
-    id: 'salario_minimo_alto', cat: 'economia', name: 'Salário mínimo digno', icon: '💵', tier: 1,
+    id: 'salario_minimo_alto', cat: 'economia', name: 'Salário mínimo digno', icon: 'banknote', tier: 1,
     desc: 'Reajuste real acima da inflação para todos os trabalhadores formais.',
     align: { economico: -30 },
     cost: { influencia: 10 }, repeatable: true,
@@ -33,7 +33,7 @@ export const LAWS = [
     tick: { stats: { inflacao: 0.12, desemprego: 0.06 }, factions: { trabalhadores: 0.3 } },
   },
   {
-    id: 'reforma_tributaria', cat: 'economia', name: 'Reforma tributária progressiva', icon: '🧾', tier: 2,
+    id: 'reforma_tributaria', cat: 'economia', name: 'Reforma tributária progressiva', icon: 'receipt', tier: 2,
     desc: 'Mais imposto sobre grandes fortunas, menos sobre consumo.',
     align: { economico: -45 },
     cost: { influencia: 18 },
@@ -41,7 +41,7 @@ export const LAWS = [
     tick: { stats: { economia: -0.05 }, treasury: 12, factions: { financeiro: -0.1 } },
   },
   {
-    id: 'imposto_unico', cat: 'economia', name: 'Imposto único', icon: '📉', tier: 2,
+    id: 'imposto_unico', cat: 'economia', name: 'Imposto único', icon: 'trending-down', tier: 2,
     desc: 'Elimina impostos sobre empresas e renda. Simplicidade radical.',
     align: { economico: 70 },
     cost: { influencia: 20 },
@@ -49,7 +49,7 @@ export const LAWS = [
     tick: { treasury: -14, stats: { economia: 0.12, corrupcao: -0.05 } },
   },
   {
-    id: 'privatizacao_maciça', cat: 'economia', name: 'Privatização em massa', icon: '🏷️', tier: 2,
+    id: 'privatizacao_maciça', cat: 'economia', name: 'Privatização em massa', icon: 'tag', tier: 2,
     desc: 'Vende estatais, portos e aeroportos para o setor privado.',
     align: { economico: 65 },
     cost: { influencia: 15 },
@@ -57,7 +57,7 @@ export const LAWS = [
     tick: { treasury: 4, stats: { infraestrutura: -0.08, desemprego: 0.04 } },
   },
   {
-    id: 'nacionalizacao_estrategica', cat: 'economia', name: 'Nacionalização estratégica', icon: '🏛️', tier: 2,
+    id: 'nacionalizacao_estrategica', cat: 'economia', name: 'Nacionalização estratégica', icon: 'landmark', tier: 2,
     desc: 'Estatiza mineração, energia e telecomunicações.',
     align: { economico: -75 },
     cost: { influencia: 20, tesouro: 90 },
@@ -65,7 +65,7 @@ export const LAWS = [
     tick: { treasury: 8, stats: { economia: -0.06, corrupcao: 0.08 }, factions: { trabalhadores: 0.12 } },
   },
   {
-    id: 'controle_precos', cat: 'economia', name: 'Tabelamento de preços', icon: '🏷️', tier: 2,
+    id: 'controle_precos', cat: 'economia', name: 'Tabelamento de preços', icon: 'tag', tier: 2,
     desc: 'Congela preços de alimentos, combustíveis e aluguéis.',
     align: { economico: -60 },
     cost: { influencia: 14 },
@@ -73,7 +73,7 @@ export const LAWS = [
     tick: { stats: { inflacao: -0.18, economia: -0.12, desemprego: 0.08 } },
   },
   {
-    id: 'banco_central_independente', cat: 'economia', name: 'Banco central independente', icon: '🏦', tier: 1,
+    id: 'banco_central_independente', cat: 'economia', name: 'Banco central independente', icon: 'landmark', tier: 1,
     desc: 'Tira a impressão de dinheiro das mãos do governo.',
     align: { economico: 40 },
     cost: { influencia: 12 },
@@ -81,7 +81,7 @@ export const LAWS = [
     tick: { stats: { inflacao: -0.1, economia: 0.03 }, treasury: -2 },
   },
   {
-    id: 'impressao_dinheiro', cat: 'economia', name: 'Financiamento monetário', icon: '🖨️', tier: 2,
+    id: 'impressao_dinheiro', cat: 'economia', name: 'Financiamento monetário', icon: 'printer', tier: 2,
     desc: 'O banco central compra títulos do governo. Dinheiro novo todo mês.',
     align: { economico: -35 },
     cost: { influencia: 8 },
@@ -89,7 +89,7 @@ export const LAWS = [
     tick: { treasury: 40, stats: { inflacao: 0.45, economia: 0.06 }, factions: { financeiro: -0.15 } },
   },
   {
-    id: 'renda_basica', cat: 'economia', name: 'Renda básica universal', icon: '🤲', tier: 3,
+    id: 'renda_basica', cat: 'economia', name: 'Renda básica universal', icon: 'hand-heart', tier: 3,
     desc: 'Um salário mínimo para cada cidadão adulto. Custa caro. Muda tudo.',
     align: { economico: -60 },
     cost: { influencia: 25 },
@@ -97,7 +97,7 @@ export const LAWS = [
     tick: { treasury: -45, stats: { economia: 0.1, aprovacao: 0.2 } },
   },
   {
-    id: 'zona_franca', cat: 'economia', name: 'Zona franca de exportação', icon: '🚢', tier: 1,
+    id: 'zona_franca', cat: 'economia', name: 'Zona franca de exportação', icon: 'ship', tier: 1,
     desc: 'Isenções para quem produz para fora. Emprego rápido, arrecadação menor.',
     align: { economico: 45, nacionalismo: -20 },
     cost: { influencia: 10 },
@@ -105,7 +105,7 @@ export const LAWS = [
     tick: { stats: { economia: 0.12, desemprego: -0.05 }, treasury: -4 },
   },
   {
-    id: 'controle_capitais', cat: 'economia', name: 'Controle de capitais', icon: '🚧', tier: 3,
+    id: 'controle_capitais', cat: 'economia', name: 'Controle de capitais', icon: 'construction', tier: 3,
     desc: 'Limita fuga de dólares e remessas ao exterior.',
     align: { economico: -55, nacionalismo: 40 },
     cost: { influencia: 18 },
@@ -113,7 +113,7 @@ export const LAWS = [
     tick: { stats: { inflacao: -0.05, economia: -0.05, sancoes: 0.1 } },
   },
   {
-    id: 'reforma_agraria', cat: 'economia', name: 'Reforma agrária', icon: '🌾', tier: 3,
+    id: 'reforma_agraria', cat: 'economia', name: 'Reforma agrária', icon: 'wheat', tier: 3,
     desc: 'Desapropria latifúndios improdutivos e distribui a pequenos produtores.',
     align: { economico: -60 },
     cost: { influencia: 22, tesouro: 40 },
@@ -121,7 +121,7 @@ export const LAWS = [
     tick: { stats: { economia: 0.05, aprovacao: 0.05 }, factions: { camponeses: 0.15 } },
   },
   {
-    id: 'subsidio_industria', cat: 'economia', name: 'Política industrial', icon: '🏭', tier: 1,
+    id: 'subsidio_industria', cat: 'economia', name: 'Política industrial', icon: 'factory', tier: 1,
     desc: 'Subsídios e crédito barato para indústria nacional.',
     align: { economico: -15, nacionalismo: 30 },
     cost: { influencia: 12 },
@@ -131,7 +131,7 @@ export const LAWS = [
 
   /* --------------------------- TRABALHO --------------------------- */
   {
-    id: 'jornada_40h', cat: 'trabalho', name: 'Jornada de 40 horas', icon: '⏰', tier: 1,
+    id: 'jornada_40h', cat: 'trabalho', name: 'Jornada de 40 horas', icon: 'alarm-clock', tier: 1,
     desc: 'Reduz a carga semanal máxima sem cortar salário.',
     align: { economico: -35 },
     cost: { influencia: 10 },
@@ -139,7 +139,7 @@ export const LAWS = [
     tick: { stats: { economia: -0.03 }, factions: { trabalhadores: 0.15 } },
   },
   {
-    id: 'jornada_4dias', cat: 'trabalho', name: 'Semana de 4 dias', icon: '🌴', tier: 3,
+    id: 'jornada_4dias', cat: 'trabalho', name: 'Semana de 4 dias', icon: 'tree-pine', tier: 3,
     desc: 'Experimentação radical. Produtividade ou caos?',
     align: { economico: -60, tradicao: -40 },
     cost: { influencia: 22 },
@@ -147,7 +147,7 @@ export const LAWS = [
     tick: { stats: { economia: -0.1, aprovacao: 0.15 } },
   },
   {
-    id: 'direito_greve', cat: 'trabalho', name: 'Direito de greve amplo', icon: '✊', tier: 1,
+    id: 'direito_greve', cat: 'trabalho', name: 'Direito de greve amplo', icon: 'hand', tier: 1,
     desc: 'Garante greve sem represália, inclusive em serviços essenciais.',
     align: { economico: -40, social: -45 },
     cost: { influencia: 12 },
@@ -155,7 +155,7 @@ export const LAWS = [
     tick: { stats: { agitacao: 0.05 }, factions: { trabalhadores: 0.2 } },
   },
   {
-    id: 'abolicacao_sindicatos', cat: 'trabalho', name: 'Fim da contribuição sindical', icon: '🚫', tier: 2,
+    id: 'abolicacao_sindicatos', cat: 'trabalho', name: 'Fim da contribuição sindical', icon: 'ban', tier: 2,
     desc: 'Sindicatos passam a viver de contribuição voluntária.',
     align: { economico: 55 },
     cost: { influencia: 14 },
@@ -163,7 +163,7 @@ export const LAWS = [
     tick: { stats: { economia: 0.04 }, factions: { trabalhadores: -0.1 } },
   },
   {
-    id: 'trabalho_forcado', cat: 'trabalho', name: 'Mobilização laboral', icon: '⛓️', tier: 3,
+    id: 'trabalho_forcado', cat: 'trabalho', name: 'Mobilização laboral', icon: 'link', tier: 3,
     desc: 'Desempregados e "improdutivos" são alocados em obras do Estado.',
     align: { social: 85, economico: -30 },
     cost: { poder: 15 },
@@ -174,7 +174,7 @@ export const LAWS = [
 
   /* --------------------------- SAÚDE --------------------------- */
   {
-    id: 'sus_universal', cat: 'saude', name: 'Saúde universal e gratuita', icon: '🏥', tier: 1,
+    id: 'sus_universal', cat: 'saude', name: 'Saúde universal e gratuita', icon: 'hospital', tier: 1,
     desc: 'Atendimento público para todos, sem coparticipação.',
     align: { economico: -55 },
     cost: { influencia: 15 },
@@ -182,7 +182,7 @@ export const LAWS = [
     tick: { treasury: -14, stats: { saude: 0.22, aprovacao: 0.08 } },
   },
   {
-    id: 'saude_privada', cat: 'saude', name: 'Saúde por seguro privado', icon: '💳', tier: 2,
+    id: 'saude_privada', cat: 'saude', name: 'Saúde por seguro privado', icon: 'credit-card', tier: 2,
     desc: 'Subsídio estatal para planos privados, rede pública residual.',
     align: { economico: 60 },
     cost: { influencia: 14 },
@@ -190,7 +190,7 @@ export const LAWS = [
     tick: { treasury: -6, stats: { saude: 0.05, aprovacao: -0.05 } },
   },
   {
-    id: 'vacinacao_obrigatoria', cat: 'saude', name: 'Vacinação obrigatória', icon: '💉', tier: 1,
+    id: 'vacinacao_obrigatoria', cat: 'saude', name: 'Vacinação obrigatória', icon: 'syringe', tier: 1,
     desc: 'Multa para quem não vacinar os filhos.',
     align: { social: 25, tradicao: -20 },
     cost: { influencia: 8 },
@@ -198,7 +198,7 @@ export const LAWS = [
     tick: { stats: { saude: 0.12 } },
   },
   {
-    id: 'drogas_legais', cat: 'saude', name: 'Legalização das drogas', icon: '🌿', tier: 3,
+    id: 'drogas_legais', cat: 'saude', name: 'Legalização das drogas', icon: 'leaf', tier: 3,
     desc: 'Regula e tributa o mercado hoje dominado pelo crime.',
     align: { social: -60, tradicao: -50 },
     cost: { influencia: 20 },
@@ -206,7 +206,7 @@ export const LAWS = [
     tick: { treasury: 8, stats: { criminalidade: -0.08, saude: 0.03 } },
   },
   {
-    id: 'saude_militarizada', cat: 'saude', name: 'Hospitais sob comando militar', icon: '🪖', tier: 2,
+    id: 'saude_militarizada', cat: 'saude', name: 'Hospitais sob comando militar', icon: 'shield', tier: 2,
     desc: 'Militares assumem a gestão da rede pública.',
     align: { social: 55 },
     cost: { poder: 8 },
@@ -216,7 +216,7 @@ export const LAWS = [
 
   /* --------------------------- EDUCAÇÃO --------------------------- */
   {
-    id: 'escola_publica', cat: 'educacao', name: 'Escola pública integral', icon: '🏫', tier: 1,
+    id: 'escola_publica', cat: 'educacao', name: 'Escola pública integral', icon: 'school', tier: 1,
     desc: 'Turno único e refeições garantidas em toda a rede.',
     align: { economico: -50 },
     cost: { influencia: 14 },
@@ -224,7 +224,7 @@ export const LAWS = [
     tick: { treasury: -12, stats: { educacao: 0.2, criminalidade: -0.03 } },
   },
   {
-    id: 'universidade_gratuita', cat: 'educacao', name: 'Universidade pública gratuita', icon: '🎓', tier: 1,
+    id: 'universidade_gratuita', cat: 'educacao', name: 'Universidade pública gratuita', icon: 'graduation-cap', tier: 1,
     desc: 'Vagas gratuitas e cotas para escolas públicas.',
     align: { economico: -55, tradicao: -25 },
     cost: { influencia: 16 },
@@ -232,7 +232,7 @@ export const LAWS = [
     tick: { treasury: -10, stats: { educacao: 0.15, tecnologia: 0.05 } },
   },
   {
-    id: 'educacao_militar', cat: 'educacao', name: 'Educação cívico-militar', icon: '🎖️', tier: 2,
+    id: 'educacao_militar', cat: 'educacao', name: 'Educação cívico-militar', icon: 'medal', tier: 2,
     desc: 'Disciplina, hierarquia e patriotismo no currículo.',
     align: { social: 55, nacionalismo: 55, tradicao: 40 },
     cost: { influencia: 10 },
@@ -240,7 +240,7 @@ export const LAWS = [
     tick: { stats: { educacao: -0.03, estabilidade: 0.05 } },
   },
   {
-    id: 'curriculo_ideologico', cat: 'educacao', name: 'Currículo oficial único', icon: '📕', tier: 3,
+    id: 'curriculo_ideologico', cat: 'educacao', name: 'Currículo oficial único', icon: 'book-open', tier: 3,
     desc: 'A história do país passa a ser ensinada pela versão do governo.',
     align: { social: 75 },
     cost: { poder: 12, influencia: 10 },
@@ -249,7 +249,7 @@ export const LAWS = [
     tick: { stats: { educacao: -0.08, estabilidade: 0.08, legitimidade: 0.05 } },
   },
   {
-    id: 'bolsa_estudo', cat: 'educacao', name: 'Bolsa de estudo universal', icon: '📚', tier: 2,
+    id: 'bolsa_estudo', cat: 'educacao', name: 'Bolsa de estudo universal', icon: 'library', tier: 2,
     desc: 'Voucher educacional para famílias escolherem a escola.',
     align: { economico: 55 },
     cost: { influencia: 14 },
@@ -259,7 +259,7 @@ export const LAWS = [
 
   /* --------------------------- SEGURANÇA --------------------------- */
   {
-    id: 'policia_militarizada', cat: 'seguranca', name: 'Polícia militarizada', icon: '🚔', tier: 2,
+    id: 'policia_militarizada', cat: 'seguranca', name: 'Polícia militarizada', icon: 'badge', tier: 2,
     desc: 'Blindados, fuzis e doutrina de guerra nas ruas.',
     align: { social: 55 },
     cost: { influencia: 12 },
@@ -267,7 +267,7 @@ export const LAWS = [
     tick: { stats: { criminalidade: -0.12, agitacao: 0.08 }, treasury: -6 },
   },
   {
-    id: 'desarmamento', cat: 'seguranca', name: 'Desarmamento civil', icon: '🚫', tier: 1,
+    id: 'desarmamento', cat: 'seguranca', name: 'Desarmamento civil', icon: 'ban', tier: 1,
     desc: 'Restringe posse e porte de armas.',
     align: { social: 25, tradicao: -30 },
     cost: { influencia: 12 },
@@ -275,7 +275,7 @@ export const LAWS = [
     tick: { stats: { criminalidade: -0.08 } },
   },
   {
-    id: 'armas_liberadas', cat: 'seguranca', name: 'Armas para cidadãos', icon: '🔫', tier: 2,
+    id: 'armas_liberadas', cat: 'seguranca', name: 'Armas para cidadãos', icon: 'crosshair', tier: 2,
     desc: 'Facilita registro e compra de armamento civil.',
     align: { social: 60, tradicao: 40 },
     cost: { influencia: 12 },
@@ -283,7 +283,7 @@ export const LAWS = [
     tick: { stats: { criminalidade: 0.1 }, treasury: 2 },
   },
   {
-    id: 'vigilancia_massa', cat: 'seguranca', name: 'Vigilância em massa', icon: '👁️', tier: 3,
+    id: 'vigilancia_massa', cat: 'seguranca', name: 'Vigilância em massa', icon: 'eye', tier: 3,
     desc: 'Reconhecimento facial, quebra de sigilo e monitoramento de redes.',
     align: { social: 80 },
     cost: { poder: 10, influencia: 10 },
@@ -292,7 +292,7 @@ export const LAWS = [
     tick: { stats: { repressao: 0.12, medo: 0.1, criminalidade: -0.05 }, treasury: -8 },
   },
   {
-    id: 'toque_recolher', cat: 'seguranca', name: 'Toque de recolher', icon: '🌙', tier: 2,
+    id: 'toque_recolher', cat: 'seguranca', name: 'Toque de recolher', icon: 'moon', tier: 2,
     desc: 'Ninguém na rua depois das 22h.',
     align: { social: 65 },
     cost: { poder: 6 },
@@ -301,7 +301,7 @@ export const LAWS = [
     tick: { stats: { criminalidade: -0.1, aprovacao: -0.05 } },
   },
   {
-    id: 'pena_morte', cat: 'seguranca', name: 'Pena de morte', icon: '☠️', tier: 3,
+    id: 'pena_morte', cat: 'seguranca', name: 'Pena de morte', icon: 'skull', tier: 3,
     desc: 'Execução legal para crimes hediondos e "crimes contra o Estado".',
     align: { social: 80, tradicao: 40 },
     cost: { influencia: 15, poder: 8 },
@@ -309,7 +309,7 @@ export const LAWS = [
     tick: { stats: { criminalidade: -0.05, reputacao: -0.05 } },
   },
   {
-    id: 'lei_antiterror', cat: 'seguranca', name: 'Lei antiterrorismo', icon: '🚨', tier: 2,
+    id: 'lei_antiterror', cat: 'seguranca', name: 'Lei antiterrorismo', icon: 'siren', tier: 2,
     desc: 'Define "terrorismo" de forma elástica o bastante para caber tudo.',
     align: { social: 70 },
     cost: { poder: 10 },
@@ -319,7 +319,7 @@ export const LAWS = [
 
   /* --------------------------- JUSTIÇA --------------------------- */
   {
-    id: 'judiciario_independente', cat: 'justica', name: 'Independência judicial', icon: '⚖️', tier: 1,
+    id: 'judiciario_independente', cat: 'justica', name: 'Independência judicial', icon: 'scale', tier: 1,
     desc: 'Mandatos fixos, orçamento próprio e concursos para juízes.',
     align: { social: -40 },
     cost: { influencia: 14 },
@@ -327,7 +327,7 @@ export const LAWS = [
     tick: { stats: { corrupcao: -0.1 } },
   },
   {
-    id: 'supremo_leal', cat: 'justica', name: 'Corte alinhada ao governo', icon: '🧑‍⚖️', tier: 2,
+    id: 'supremo_leal', cat: 'justica', name: 'Corte alinhada ao governo', icon: 'circle-help', tier: 2,
     desc: 'Amplia a Corte e nomeia juízes alinhados.',
     align: { social: 70 },
     cost: { poder: 12, influencia: 10 },
@@ -336,7 +336,7 @@ export const LAWS = [
     tick: { control: { judiciario: 0.15 } },
   },
   {
-    id: 'anticorrupcao', cat: 'justica', name: 'Lei anticorrupção', icon: '🔎', tier: 1,
+    id: 'anticorrupcao', cat: 'justica', name: 'Lei anticorrupção', icon: 'search', tier: 1,
     desc: 'Delação premiada, transparência e confisco de bens.',
     align: { social: -20 },
     cost: { influencia: 16 },
@@ -344,14 +344,14 @@ export const LAWS = [
     tick: { stats: { corrupcao: -0.2 } },
   },
   {
-    id: 'anistia', cat: 'justica', name: 'Anistia geral', icon: '🕯️', tier: 2,
+    id: 'anistia', cat: 'justica', name: 'Anistia geral', icon: 'flame', tier: 2,
     desc: 'Perdoa crimes políticos — inclusive os seus.',
     align: { social: -10 },
     cost: { poder: 8, influencia: 12 },
     enact: { stats: { corrupcao: 4, estabilidade: 3 }, factions: { militares: 8, imprensa: -10 }, flags: { anistiado: true }, text: 'Anistia ampla aprovada.' },
   },
   {
-    id: 'tribunal_revolucionario', cat: 'justica', name: 'Tribunais de exceção', icon: '🔨', tier: 3,
+    id: 'tribunal_revolucionario', cat: 'justica', name: 'Tribunais de exceção', icon: 'hammer', tier: 3,
     desc: 'Julgamentos sumários, sem direito a recurso.',
     align: { social: 90 },
     cost: { poder: 18 },
@@ -362,7 +362,7 @@ export const LAWS = [
 
   /* --------------------------- LIBERDADES --------------------------- */
   {
-    id: 'liberdade_imprensa', cat: 'liberdade', name: 'Lei de imprensa livre', icon: '📰', tier: 1,
+    id: 'liberdade_imprensa', cat: 'liberdade', name: 'Lei de imprensa livre', icon: 'newspaper', tier: 1,
     desc: 'Proíbe censura prévia e garante sigilo de fonte.',
     align: { social: -60 },
     cost: { influencia: 14 },
@@ -370,7 +370,7 @@ export const LAWS = [
     tick: { stats: { liberdades: 0.08, aprovacao: -0.02 } },
   },
   {
-    id: 'censura', cat: 'liberdade', name: 'Censura de conteúdo', icon: '🚫', tier: 2,
+    id: 'censura', cat: 'liberdade', name: 'Censura de conteúdo', icon: 'ban', tier: 2,
     desc: 'Órgão estatal aprova previamente o que é publicado.',
     align: { social: 80 },
     cost: { poder: 12 },
@@ -378,7 +378,7 @@ export const LAWS = [
     tick: { stats: { liberdades: -0.1, medo: 0.1 }, control: { midia: 0.1 } },
   },
   {
-    id: 'partido_unico_lei', cat: 'liberdade', name: 'Partido único', icon: '🚩', tier: 3,
+    id: 'partido_unico_lei', cat: 'liberdade', name: 'Partido único', icon: 'flag', tier: 3,
     desc: 'Legaliza apenas a sua sigla. As outras são "movimentos ilegais".',
     align: { social: 95 },
     cost: { poder: 30 },
@@ -393,7 +393,7 @@ export const LAWS = [
     tick: { stats: { liberdades: -0.1, repressao: 0.1 } },
   },
   {
-    id: 'estado_emergencia', cat: 'liberdade', name: 'Estado de emergência', icon: '🆘', tier: 2,
+    id: 'estado_emergencia', cat: 'liberdade', name: 'Estado de emergência', icon: 'siren', tier: 2,
     desc: 'Suspende direitos e concentra poderes no Executivo.',
     align: { social: 75 },
     cost: { poder: 14 },
@@ -402,14 +402,14 @@ export const LAWS = [
     tick: { stats: { liberdades: -0.05, agitacao: 0.05 } },
   },
   {
-    id: 'casamento_igualitario', cat: 'liberdade', name: 'Igualdade civil plena', icon: '🏳️‍🌈', tier: 1,
+    id: 'casamento_igualitario', cat: 'liberdade', name: 'Igualdade civil plena', icon: 'circle-help', tier: 1,
     desc: 'Casamento e adoção para casais do mesmo sexo.',
     align: { tradicao: -70, social: -50 },
     cost: { influencia: 10 },
     enact: { stats: { liberdades: 6, aprovacao: 2 }, factions: { minorias: 20, juventude: 14, igreja: -22, nacionalistas: -10 }, text: 'União civil igualitária garantida.' },
   },
   {
-    id: 'cotas', cat: 'liberdade', name: 'Cotas raciais e sociais', icon: '🤲', tier: 1,
+    id: 'cotas', cat: 'liberdade', name: 'Cotas raciais e sociais', icon: 'hand-heart', tier: 1,
     desc: 'Reserva de vagas em universidades e concursos.',
     align: { economico: -30, tradicao: -50 },
     cost: { influencia: 12 },
@@ -417,7 +417,7 @@ export const LAWS = [
     tick: { stats: { educacao: 0.05, criminalidade: -0.02 } },
   },
   {
-    id: 'lei_moral', cat: 'liberdade', name: 'Lei de costumes', icon: '⛪', tier: 2,
+    id: 'lei_moral', cat: 'liberdade', name: 'Lei de costumes', icon: 'church', tier: 2,
     desc: 'Restringe conteúdo adulto, divórcio e "condutas desviantes".',
     align: { tradicao: 80, religiao: 60 },
     cost: { influencia: 10 },
@@ -425,7 +425,7 @@ export const LAWS = [
     tick: { stats: { aprovacao: 0.03, liberdades: -0.03 } },
   },
   {
-    id: 'liberdade_religiosa', cat: 'liberdade', name: 'Liberdade religiosa', icon: '🕊️', tier: 1,
+    id: 'liberdade_religiosa', cat: 'liberdade', name: 'Liberdade religiosa', icon: 'feather', tier: 1,
     desc: 'Estado laico, todas as crenças iguais perante a lei.',
     align: { religiao: -70 },
     cost: { influencia: 10 },
@@ -434,7 +434,7 @@ export const LAWS = [
 
   /* --------------------------- CULTURA --------------------------- */
   {
-    id: 'culto_personalidade', cat: 'cultura', name: 'Culto à personalidade', icon: '👤', tier: 3,
+    id: 'culto_personalidade', cat: 'cultura', name: 'Culto à personalidade', icon: 'user', tier: 3,
     desc: 'Retratos, hinos e estádios com o seu nome.',
     align: { social: 90 },
     cost: { poder: 15, tesouro: 20 },
@@ -443,21 +443,21 @@ export const LAWS = [
     tick: { stats: { legitimidade: 0.15, culto: 0 }, treasury: -3 },
   },
   {
-    id: 'historia_oficial', cat: 'cultura', name: 'História oficial', icon: '📖', tier: 2,
+    id: 'historia_oficial', cat: 'cultura', name: 'História oficial', icon: 'book-open', tier: 2,
     desc: 'Monumentos, feriados e museus contam a sua versão.',
     align: { social: 70, nacionalismo: 50 },
     cost: { influencia: 12 },
     enact: { stats: { estabilidade: 4, legitimidade: 5, liberdades: -3 }, factions: { intelectuais: -10, nacionalistas: 12 }, text: 'Narrativa nacional reescrita.' },
   },
   {
-    id: 'lingua_oficial', cat: 'cultura', name: 'Língua oficial única', icon: '🔤', tier: 2,
+    id: 'lingua_oficial', cat: 'cultura', name: 'Língua oficial única', icon: 'languages', tier: 2,
     desc: 'Proíbe ensino em línguas minoritárias no serviço público.',
     align: { nacionalismo: 70, tradicao: 50 },
     cost: { influencia: 10 },
     enact: { stats: { estabilidade: 2 }, factions: { nacionalistas: 14, minorias: -18 }, text: 'Uma só língua no Estado.' },
   },
   {
-    id: 'futebol_nacional', cat: 'cultura', name: 'Esporte como política de Estado', icon: '⚽', tier: 1,
+    id: 'futebol_nacional', cat: 'cultura', name: 'Esporte como política de Estado', icon: 'trophy', tier: 1,
     desc: 'Estádios, olimpíadas e seleções financiadas pelo governo.',
     align: { nacionalismo: 30 },
     cost: { influencia: 8, tesouro: 30 },
@@ -465,7 +465,7 @@ export const LAWS = [
     tick: { treasury: -4, stats: { aprovacao: 0.03 } },
   },
   {
-    id: 'religiao_oficial', cat: 'cultura', name: 'Religião oficial do Estado', icon: '⛪', tier: 3,
+    id: 'religiao_oficial', cat: 'cultura', name: 'Religião oficial do Estado', icon: 'church', tier: 3,
     desc: 'Uma fé vira doutrina nacional, com verba e privilégios.',
     align: { religiao: 95, tradicao: 70 },
     cost: { influencia: 20, poder: 10 },
@@ -474,7 +474,7 @@ export const LAWS = [
     tick: { stats: { legitimidade: 0.1, liberdades: -0.04 } },
   },
   {
-    id: 'feriado_nacional', cat: 'cultura', name: 'Dia da Nação', icon: '🎉', tier: 1,
+    id: 'feriado_nacional', cat: 'cultura', name: 'Dia da Nação', icon: 'party-popper', tier: 1,
     desc: 'Um feriado nacional novo, com desfile e discurso.',
     align: { nacionalismo: 25 },
     cost: { influencia: 6 }, repeatable: true,
@@ -483,7 +483,7 @@ export const LAWS = [
 
   /* --------------------------- AMBIENTE --------------------------- */
   {
-    id: 'protecao_florestal', cat: 'ambiente', name: 'Proteção florestal total', icon: '🌳', tier: 2,
+    id: 'protecao_florestal', cat: 'ambiente', name: 'Proteção florestal total', icon: 'tree-deciduous', tier: 2,
     desc: 'Proíbe desmatamento e garante terras indígenas.',
     align: { ecologia: 80 },
     cost: { influencia: 15 },
@@ -491,7 +491,7 @@ export const LAWS = [
     tick: { stats: { meioAmbiente: 0.15, economia: -0.03 } },
   },
   {
-    id: 'exploracao_total', cat: 'ambiente', name: 'Exploração total', icon: '⛏️', tier: 2,
+    id: 'exploracao_total', cat: 'ambiente', name: 'Exploração total', icon: 'pickaxe', tier: 2,
     desc: 'Abre florestas e reservas para mineração e agro.',
     align: { ecologia: -85, economico: 40 },
     cost: { influencia: 12 },
@@ -499,7 +499,7 @@ export const LAWS = [
     tick: { treasury: 10, stats: { economia: 0.1, meioAmbiente: -0.18 } },
   },
   {
-    id: 'transicao_verde', cat: 'ambiente', name: 'Transição energética', icon: '🌞', tier: 2,
+    id: 'transicao_verde', cat: 'ambiente', name: 'Transição energética', icon: 'sun', tier: 2,
     desc: 'Solar, eólica e fim gradual dos combustíveis fósseis.',
     align: { ecologia: 85, economico: -20 },
     cost: { influencia: 18, tesouro: 60 },
@@ -507,7 +507,7 @@ export const LAWS = [
     tick: { stats: { meioAmbiente: 0.18, economia: 0.03, tecnologia: 0.05 }, treasury: -6 },
   },
   {
-    id: 'energia_nuclear', cat: 'ambiente', name: 'Programa nuclear civil', icon: '☢️', tier: 2,
+    id: 'energia_nuclear', cat: 'ambiente', name: 'Programa nuclear civil', icon: 'radiation', tier: 2,
     desc: 'Usinas atômicas para energia barata.',
     align: { ecologia: 20, nacionalismo: 30 },
     cost: { influencia: 15, tesouro: 80 },
@@ -517,7 +517,7 @@ export const LAWS = [
 
   /* --------------------------- TECNOLOGIA --------------------------- */
   {
-    id: 'internet_livre', cat: 'tecnologia', name: 'Neutralidade da rede', icon: '🌐', tier: 1,
+    id: 'internet_livre', cat: 'tecnologia', name: 'Neutralidade da rede', icon: 'globe', tier: 1,
     desc: 'Internet aberta e sem bloqueios.',
     align: { social: -55 },
     cost: { influencia: 10 },
@@ -525,7 +525,7 @@ export const LAWS = [
     tick: { stats: { tecnologia: 0.05 } },
   },
   {
-    id: 'controle_internet', cat: 'tecnologia', name: 'Soberania digital', icon: '🔒', tier: 3,
+    id: 'controle_internet', cat: 'tecnologia', name: 'Soberania digital', icon: 'lock', tier: 3,
     desc: 'Firewall nacional, cadastro de identidade digital e bloqueio de VPNs.',
     align: { social: 80, nacionalismo: 40 },
     cost: { poder: 12, influencia: 12 },
@@ -534,7 +534,7 @@ export const LAWS = [
     tick: { stats: { liberdades: -0.07 } },
   },
   {
-    id: 'ia_estatal', cat: 'tecnologia', name: 'IA nacional de planejamento', icon: '🤖', tier: 2,
+    id: 'ia_estatal', cat: 'tecnologia', name: 'IA nacional de planejamento', icon: 'bot', tier: 2,
     desc: 'Algoritmo estatal otimiza orçamento e fiscalização.',
     align: { social: 20 },
     cost: { influencia: 18, tesouro: 70 },
@@ -542,7 +542,7 @@ export const LAWS = [
     tick: { stats: { tecnologia: 0.15, economia: 0.04, corrupcao: -0.05 }, treasury: -5 },
   },
   {
-    id: 'programa_espacial', cat: 'tecnologia', name: 'Programa espacial', icon: '🚀', tier: 1,
+    id: 'programa_espacial', cat: 'tecnologia', name: 'Programa espacial', icon: 'rocket', tier: 1,
     desc: 'Satélites próprios e foguetes de observação.',
     align: { nacionalismo: 40 },
     cost: { influencia: 12, tesouro: 50 },
@@ -552,7 +552,7 @@ export const LAWS = [
 
   /* --------------------------- MILITAR --------------------------- */
   {
-    id: 'servico_militar', cat: 'militar', name: 'Serviço militar obrigatório', icon: '🪖', tier: 2,
+    id: 'servico_militar', cat: 'militar', name: 'Serviço militar obrigatório', icon: 'shield', tier: 2,
     desc: 'Todo jovem serve por um ano.',
     align: { social: 50, nacionalismo: 60 },
     cost: { influencia: 12 },
@@ -560,7 +560,7 @@ export const LAWS = [
     tick: { stats: { poderMilitar: 0.12 }, treasury: -5 },
   },
   {
-    id: 'milicia_paralela', cat: 'militar', name: 'Guarda nacional partidária', icon: '🛡️', tier: 3,
+    id: 'milicia_paralela', cat: 'militar', name: 'Guarda nacional partidária', icon: 'shield', tier: 3,
     desc: 'Força armada leal ao partido, não ao Estado.',
     align: { social: 90 },
     cost: { poder: 14, tesouro: 40 },
@@ -569,7 +569,7 @@ export const LAWS = [
     tick: { stats: { medo: 0.15, lealdadeMilitar: -0.1 }, treasury: -6 },
   },
   {
-    id: 'mercenarios', cat: 'militar', name: 'Companhias militares privadas', icon: '💼', tier: 2,
+    id: 'mercenarios', cat: 'militar', name: 'Companhias militares privadas', icon: 'briefcase', tier: 2,
     desc: 'Contrata exércitos privados para o que o exército não quer fazer.',
     align: { economico: 55, social: 40 },
     cost: { tesouro: 60 },
@@ -577,7 +577,7 @@ export const LAWS = [
     tick: { treasury: -8, stats: { poderMilitar: 0.08 } },
   },
   {
-    id: 'programa_atomico', cat: 'militar', name: 'Programa atômico militar', icon: '☢️', tier: 3,
+    id: 'programa_atomico', cat: 'militar', name: 'Programa atômico militar', icon: 'radiation', tier: 3,
     desc: 'Enriquecimento de urânio para fins "pacíficos".',
     align: { nacionalismo: 80 },
     cost: { tesouro: 150, poder: 12 },
@@ -586,7 +586,7 @@ export const LAWS = [
     tick: { treasury: -12, stats: { sancoes: 0.1, reputacao: -0.05 }, flags: { programa_nuclear: true } },
   },
   {
-    id: 'lei_marcial', cat: 'militar', name: 'Lei marcial', icon: '🚨', tier: 3,
+    id: 'lei_marcial', cat: 'militar', name: 'Lei marcial', icon: 'siren', tier: 3,
     desc: 'Militares assumem as ruas e a Justiça comum é suspensa.',
     align: { social: 95 },
     cost: { poder: 25 },
@@ -597,7 +597,7 @@ export const LAWS = [
 
   /* --------------------------- MUNDO --------------------------- */
   {
-    id: 'abertura_comercial', cat: 'mundo', name: 'Abertura comercial', icon: '🌐', tier: 1,
+    id: 'abertura_comercial', cat: 'mundo', name: 'Abertura comercial', icon: 'globe', tier: 1,
     desc: 'Reduz tarifas e assina acordos de livre comércio.',
     align: { nacionalismo: -60, economico: 50 },
     cost: { influencia: 12 },
@@ -605,7 +605,7 @@ export const LAWS = [
     tick: { stats: { economia: 0.1, desemprego: 0.03 }, treasury: 5 },
   },
   {
-    id: 'protecionismo', cat: 'mundo', name: 'Protecionismo nacional', icon: '🧱', tier: 2,
+    id: 'protecionismo', cat: 'mundo', name: 'Protecionismo nacional', icon: 'brick-wall', tier: 2,
     desc: 'Tarifas altas para produtos estrangeiros.',
     align: { nacionalismo: 70 },
     cost: { influencia: 12 },
@@ -613,7 +613,7 @@ export const LAWS = [
     tick: { treasury: 8, stats: { inflacao: 0.08, economia: -0.02 } },
   },
   {
-    id: 'romper_tratados', cat: 'mundo', name: 'Ruptura com organismos internacionais', icon: '🚪', tier: 3,
+    id: 'romper_tratados', cat: 'mundo', name: 'Ruptura com organismos internacionais', icon: 'door-open', tier: 3,
     desc: 'Sai de tratados, conselhos e acordos climáticos.',
     align: { nacionalismo: 80, social: 30 },
     cost: { poder: 10, influencia: 12 },
@@ -621,7 +621,7 @@ export const LAWS = [
     tick: { stats: { sancoes: 0.1, economia: -0.05 } },
   },
   {
-    id: 'ajuda_externa', cat: 'mundo', name: 'Programa de ajuda externa', icon: '🤝', tier: 1,
+    id: 'ajuda_externa', cat: 'mundo', name: 'Programa de ajuda externa', icon: 'handshake', tier: 1,
     desc: 'Envia recursos a países pobres em troca de influência.',
     align: { economico: -20, nacionalismo: -40 },
     cost: { tesouro: 80, influencia: 8 },
@@ -631,7 +631,7 @@ export const LAWS = [
 
   /* --------------------------- CONSTITUIÇÃO --------------------------- */
   {
-    id: 'nova_constituicao', cat: 'constituicao', name: 'Nova Constituição', icon: '📜', tier: 3,
+    id: 'nova_constituicao', cat: 'constituicao', name: 'Nova Constituição', icon: 'scroll-text', tier: 3,
     desc: 'Reescreve as regras do jogo do zero, com sua assinatura.',
     align: {},
     cost: { poder: 30, influencia: 25 },
@@ -640,7 +640,7 @@ export const LAWS = [
     tick: { stats: { legitimidade: 0.05 } },
   },
   {
-    id: 'reeleicao_ilimitada', cat: 'constituicao', name: 'Reeleição ilimitada', icon: '🔁', tier: 3,
+    id: 'reeleicao_ilimitada', cat: 'constituicao', name: 'Reeleição ilimitada', icon: 'repeat', tier: 3,
     desc: 'Fim do limite de mandatos. Só para você, é claro.',
     align: { social: 80 },
     cost: { poder: 22, influencia: 20 },
@@ -648,14 +648,14 @@ export const LAWS = [
     enact: { stats: { liberdades: -6, legitimidade: -5, estabilidade: 3 }, factions: { imprensa: -12, juventude: -8, militares: 6 }, flags: { mandato_ilimitado: true }, text: 'Limite de mandatos eliminado da Constituição.' },
   },
   {
-    id: 'parlamentarismo', cat: 'constituicao', name: 'Regime parlamentarista', icon: '🏛️', tier: 2,
+    id: 'parlamentarismo', cat: 'constituicao', name: 'Regime parlamentarista', icon: 'landmark', tier: 2,
     desc: 'O governo passa a depender da confiança do parlamento.',
     align: { social: -30 },
     cost: { influencia: 20, poder: 8 },
     enact: { stats: { estabilidade: 3, liberdades: 4 }, flags: { parlamentarismo: true }, factions: { imprensa: 8 }, text: 'País adota o parlamentarismo.' },
   },
   {
-    id: 'presidencialismo_forte', cat: 'constituicao', name: 'Presidencialismo forte', icon: '🦅', tier: 2,
+    id: 'presidencialismo_forte', cat: 'constituicao', name: 'Presidencialismo forte', icon: 'bird', tier: 2,
     desc: 'Mais poderes unilaterais para o Executivo.',
     align: { social: 65 },
     cost: { poder: 14, influencia: 12 },
@@ -664,14 +664,14 @@ export const LAWS = [
     tick: { control: { judiciario: 0.05 } },
   },
   {
-    id: 'voto_obrigatorio', cat: 'constituicao', name: 'Voto obrigatório', icon: '🗳️', tier: 1,
+    id: 'voto_obrigatorio', cat: 'constituicao', name: 'Voto obrigatório', icon: 'vote', tier: 1,
     desc: 'Multa para quem não votar.',
     align: { social: 20 },
     cost: { influencia: 8 },
     enact: { stats: { legitimidade: 3, liberdades: -2 }, factions: { juventude: -4 }, flags: { voto_obrigatorio: true }, text: 'Voto passa a ser obrigatório.' },
   },
   {
-    id: 'voto_censitario', cat: 'constituicao', name: 'Voto censitário', icon: '💎', tier: 3,
+    id: 'voto_censitario', cat: 'constituicao', name: 'Voto censitário', icon: 'gem', tier: 3,
     desc: 'Só quem paga impostos acima de um valor pode votar.',
     align: { economico: 70, social: 70 },
     cost: { poder: 18, influencia: 18 },
@@ -679,7 +679,7 @@ export const LAWS = [
     enact: { stats: { liberdades: -12, agitacao: 8, legitimidade: -8 }, control: { eleitoral: 15 }, factions: { trabalhadores: -20, financeiro: 14, imprensa: -12 }, text: 'Direito de voto restrito por renda.' },
   },
   {
-    id: 'monarquia_lei', cat: 'constituicao', name: 'Restauração da monarquia', icon: '👑', tier: 3,
+    id: 'monarquia_lei', cat: 'constituicao', name: 'Restauração da monarquia', icon: 'crown', tier: 3,
     desc: 'A coroa volta — e, coincidência, cabe na sua cabeça.',
     align: { tradicao: 70, social: 80 },
     cost: { poder: 35, influencia: 25 },
@@ -693,14 +693,14 @@ export const LAWS = [
     },
   },
   {
-    id: 'federalismo', cat: 'constituicao', name: 'Federalismo forte', icon: '🗺️', tier: 1,
+    id: 'federalismo', cat: 'constituicao', name: 'Federalismo forte', icon: 'map', tier: 1,
     desc: 'Estados ganham autonomia e orçamento próprio.',
     align: { social: -30 },
     cost: { influencia: 12 },
     enact: { stats: { estabilidade: 3, corrupcao: 2, economia: 1 }, flags: { federalismo: true }, factions: { empresariado: 6 }, text: 'Pacto federativo ampliado.' },
   },
   {
-    id: 'centralismo', cat: 'constituicao', name: 'Centralização absoluta', icon: '🎯', tier: 3,
+    id: 'centralismo', cat: 'constituicao', name: 'Centralização absoluta', icon: 'target', tier: 3,
     desc: 'Governadores viram funcionários nomeados por você.',
     align: { social: 85 },
     cost: { poder: 20, influencia: 15 },

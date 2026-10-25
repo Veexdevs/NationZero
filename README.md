@@ -1,208 +1,150 @@
-![NationZero](build/banner.png)
+<p align="center">
+  <img src="www/assets/logo.png" alt="NationZero" width="420" />
+</p>
 
-# 🏛️ NationZero
+# NationZero
 
-**Um país inteiro nas suas mãos.** Você começa como um cidadão comum — e termina como quiser:
-presidente reeleito, ditador de mão de ferro, monarca coroado, ou um desastre nacional que virou piada internacional.
+**Grand strategy de mapa-múndi.** Escolha um país de verdade, assuma o poder e governe do primeiro ao último mês:
+leis, partido, eleições, golpe, ditadura, espionagem, alianças — e conquista província por província até o mundo inteiro
+estar pintado com a sua cor.
 
-> Simulador de poder e política em português. Roda no **navegador**, **Windows (.exe)**, **Linux (.AppImage/.deb)**,
-> **macOS (.dmg)**, **Android (.apk)** e **iOS (.ipa)** — tudo a partir do mesmo código.
-
----
-
-## 🎮 O que você pode fazer
-
-### Política completa
-- **Fundar seu partido** — nome, sigla, cor, símbolo, slogan e seis eixos ideológicos (economia, ordem, nação, religião, ecologia, costumes).
-- **Carreira completa**: cidadão → ativista → líder de partido → deputado → ministro → vice-presidente → presidente → (ditador/monarca).
-- **Eleições** a cada 4 anos, parlamento com 300 cadeiras, campanhas, comícios, compra de votos, manipulação do sistema eleitoral.
-- **Plebiscitos**, dissolução do parlamento, fechamento do Congresso, adiamento de eleições, autoanistia.
-
-### Escreva as regras
-**80 leis** em 13 categorias: reforma agrária, renda básica, imposto único, privatização, nacionalização,
-semana de 4 dias, saúde universal, pena de morte, censura, partido único, vigilância em massa,
-religião oficial, programa atômico, lei marcial, nova Constituição, monarquia, voto censitário…
-E **decretos personalizados**: você escolhe nome, justificativa e até 3 medidas — o jogo não limita sua criatividade.
-
-### Poder sem limites
-- **Golpe militar**, **autogolpe** e **proclamação de ditadura** com cálculo real de chance (lealdade militar, controle das Forças Armadas, poder, estabilidade, aprovação).
-- **Purgas** com 8 tipos de alvo e 5 métodos (demissão, prisão, exílio, desaparecimento, execução) — cada um com risco de vazamento.
-- Subordinar Judiciário, intervir na imprensa, comprar militares, criar milícias, cercar a capital, culto à personalidade.
-- Regimes: democracia, semidemocracia, autoritarismo, partido único, teocracia, tecnocracia, monarquia, junta militar, colapso.
-
-### Mundo
-**10 países** com personalidade própria, relações bilaterais, 6 tipos de tratados, ajuda externa, sanções,
-espionagem, sabotagem econômica, desinformação, assassinato de líderes, golpes no exterior, exportação da revolução e **guerra** com frentes e baixas.
-
-### Economia viva
-Impostos (renda, empresas, consumo, patrimônio, tarifas) e 8 áreas de gasto ajustáveis. Receita, despesa,
-dívida com juros, inflação, desemprego, crescimento, evasão por corrupção, sanções, emissão de títulos, calote, ajuste fiscal, estatização de bancos.
-
-### Sociedade que reage
-**12 facções** observam você: empresariado, financeiro, trabalhadores, camponeses, militares, igrejas, imprensa, juventude, intelectuais, minorias, nacionalistas e polícia. Cada decisão muda quem te ama e quem te odeia.
-Tudo alimenta aprovação, estabilidade, agitação e o **risco de golpe contra você**.
-
-### Consequências de verdade
-- **54 eventos** com escolhas (crise cambial, greve geral, apagão, escândalo de corrupção, protestos, pandemia, seca, migração, motim militar, primavera, mandado internacional, bomba e bunker…).
-- **Fim de jogo**: impeachment, golpe, revolução, hiperinflação, colapso econômico, renúncia forçada.
-- **Legado**: 15 conquistas, estatísticas de golpes, purgas, guerras e anos no poder.
+> **3.427 províncias · 172 países · mapa dinâmico em tela cheia (paisagem)**
+> Roda no **navegador**, **Windows (.exe)**, **Linux (.AppImage/.deb)**, **macOS (.dmg)**,
+> **Android (.apk)** e **iOS (.ipa)** — tudo a partir do mesmo código.
 
 ---
 
-## ⬇️ Baixar agora
+## Jogar agora
 
-**[➡️ Página de releases com todos os instaladores](https://github.com/Veexdevs/NationZero/releases/latest)**
+- **Web:** sirva a pasta `www/` (`npm run serve`) ou publique no GitHub Pages.
+- **Downloads:** [releases do projeto](https://github.com/Veexdevs/NationZero/releases).
 
 | Plataforma | Arquivo |
-|---|---|
-| 🪟 Windows | `NationZero-*-x64.exe` (instalador) · `NationZero-*-portable.exe` |
-| 🍎 macOS | `NationZero-*-x64.dmg` (Intel) · `NationZero-*-arm64.dmg` (Apple Silicon) |
-| 🐧 Linux | `NationZero-*-x86_64.AppImage` · `NationZero-*-amd64.deb` |
-| 🤖 Android | `NationZero-*.apk` |
-| 🍏 iOS | `NationZero-unsigned.ipa` (precisa de assinatura própria para instalar) |
+| --- | --- |
+| Windows | `NationZero-2.0.0-x64.exe` / `-portable.exe` |
+| macOS | `-x64.dmg` / `-arm64.dmg` (Apple Silicon) |
+| Linux | `-x86_64.AppImage` / `-amd64.deb` |
+| Android | `2.0.0.apk` |
+| iOS | `NationZero-unsigned.ipa` (precisa de assinatura própria) |
 
 ---
 
-## 🚀 Jogar agora
+## O mapa
 
-### No navegador
-Abra o `index.html` da pasta `www/` **através de um servidor** (o jogo usa módulos ES):
+- **3.427 províncias** desenhadas a partir de dados reais (Natural Earth), cada uma com população,
+  desenvolvimento, guarnição, turbulência e construções.
+- **172 países** com nome em português, região, população real, área e índice de desenvolvimento.
+- **Mapa vivo:** cores políticas por dono, exércitos com números, frentes de guerra, capital marcada,
+  zoom (roda do mouse, pinça, botões, teclado) e arraste livre.
+- **Tela cheia e deitada:** interface pensada para paisagem — barra superior de recursos, trilha lateral de
+  ministérios, painel deslizante e inspetor de província flutuante sobre o mapa.
 
-```bash
-npm run serve
-# abra http://localhost:4173
-```
+## O que dá para fazer
 
-Também dá para instalar como aplicativo (PWA): no Chrome/Android use "Instalar aplicativo";
-no iPhone, Safari → Compartilhar → "Adicionar à Tela de Início". O jogo funciona **offline** depois de carregado.
+### Conquista e guerra
+- **Recrutar exércitos** província por província, com mão de obra e custo em tesouro.
+- **Marchar** para províncias vizinhas; províncias inimigas geram **batalha** com moral, fortes e guarnição.
+- **Ocupar, anexar e perder** território — e ser apagado do mapa se perder tudo.
+- **Revoltas**: províncias ocupadas com turbulência alta voltam ao dono original.
+- **Construções**: fábrica, forte, porto, escola e base militar, cada uma com efeito real.
 
-### 🌍 Jogar online (GitHub Pages)
-Depois de ativar em **Settings → Pages → Source: GitHub Actions**, cada push na `main` publica o jogo em:
+### Diplomacia
+Declarar guerra, propor paz, **alianças**, **acordos comerciais**, **sanções**, **espionagem**
+(sabotagem, golpe, roubo), **exigir tributo**, melhorar relações e acompanhar o **ranking de poder** do mundo.
+A IA declara guerras, assina pazes, recruta e se expande sozinha — o mapa muda mesmo se você não fizer nada.
 
-**https://veexdevs.github.io/NationZero/**
+### Política interna (herdada e expandida)
+- **Fundar partido** com sigla, cor, símbolo, slogan e seis eixos ideológicos.
+- **Eleições** a cada 4 anos, parlamento de 300 cadeiras, comícios, compra de votos, manipulação.
+- **80 leis** em 13 categorias + **decretos personalizados** (você inventa nome, justificativa e medidas).
+- **Golpe militar, autogolpe, ditadura, monarquia, teocracia, junta** — com cálculo de chance real.
+- **Purgas**, censura, controle do Judiciário, milícias, culto à personalidade, plebiscitos.
+- **Economia viva**: 5 impostos, 8 áreas de gasto, dívida com juros, inflação, desemprego, corrupção,
+  calote, estatização, ajuste fiscal.
+- **Facções** (trabalhadores, empresariado, militares, imprensa, intelectuais, juventude, minorias…) e
+  **~54 eventos** com escolhas que mudam o país.
+- **Crônica** de tudo o que aconteceu e **Legado** com conquistas.
 
-### Baixar os executáveis
-Os instaladores são gerados pelo GitHub Actions (não ficam versionados no repositório):
-
-1. Vá em **Actions** no GitHub.
-2. Escolha o workflow:
-   - **Build Desktop (.exe / .dmg / .AppImage)** → baixe o artefato `NationZero-win`, `NationZero-mac` ou `NationZero-linux`.
-   - **Build Android (.apk)** → baixe o artefato `NationZero-APK` (APK de debug, pronto para instalar).
-   - **Build iOS (.ipa sem assinatura)** → baixe `NationZero-iOS-ipa`.
-3. Ou crie uma tag para gerar uma **release** com todos os arquivos juntos (o link fica permanente):
-
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-> ⚠️ **Sobre assinaturas**: os builds não são assinados digitalmente (não há certificado no projeto).
-> - **Windows**: SmartScreen avisa → "Mais informações" → "Executar assim mesmo".
-> - **macOS**: botão direito no app → "Abrir". Se bloquear: `xattr -dr com.apple.quarantine /Applications/NationZero.app`.
-> - **Android**: ative "Instalar de fontes desconhecidas".
-> - **iOS**: um `.ipa` sem assinatura **não instala** em iPhone normal. Para rodar no seu aparelho você precisa
->   de conta Apple Developer + provisioning profile (ou usar AltStore/Sideloadly com seu próprio Apple ID).
-
-### Compilar você mesmo
-
-```bash
-npm install
-
-npm run serve        # web
-npm start            # desktop (Electron) em modo dev
-npm test             # testes do motor (313 verificações)
-
-npm run dist:win     # .exe (no Windows)
-npm run dist:mac     # .dmg (no macOS)
-npm run dist:linux   # .AppImage/.deb (no Linux)
-
-npm run cap:add:android && npm run cap:sync && npm run cap:open:android   # APK via Android Studio
-npm run cap:add:ios && npm run cap:sync && npm run cap:open:ios           # IPA via Xcode
-```
+### Interface
+- **Zero emojis**: todos os símbolos são **ícones SVG** (Lucide) gerados offline — funciona sem internet.
+- Painéis sobre o mapa, atalhos de teclado (`espaço` avança o mês, setas movem, `+`/`-` zoom, `Esc` fecha).
+- Save automático no navegador, **exportar/importar campanha** em JSON.
 
 ---
 
-## 🧠 Como o jogo funciona
+## Como jogar em 60 segundos
 
-Cada **mês** (um clique em *Avançar mês*, ou barra de espaço):
-
-1. Entram receitas, saem despesas e juros da dívida.
-2. Leis em vigor aplicam seus efeitos contínuos.
-3. Gastos públicos puxam os indicadores de saúde, educação, infraestrutura, tecnologia e ambiente.
-4. Economia e serviços ajustam inflação, desemprego e crescimento.
-5. Sociedade recalcula aprovação, estabilidade, agitação, legitimidade, liberdades, corrupção e medo.
-6. Facções reagem à sua ideologia e às suas decisões.
-7. Instituições (mídia, Judiciário, polícia, Forças Armadas, sistema eleitoral) convergem para o nível de controle.
-8. O mundo ajusta relações, sanções e reputação; guerras avançam.
-9. Poder e influência se regeneram.
-10. Um evento pode ocorrer. Eleições acontecem no prazo. O jogo checa condições de fim.
-
-### Recursos
-| Recurso | Para que serve | Como cresce |
-|---|---|---|
-| ⚡ **Poder** | golpes, purgas, decretos, coerção | legitimidade, controle institucional, medo, ser chefe de Estado |
-| 🤝 **Influência** | leis, cargos, diplomacia, espionagem | aprovação, reputação, partido com muitos membros |
-| 💰 **Tesouro** | tudo que custa dinheiro | arrecadação − gastos − juros |
-| 👍 **Aprovação** | sobrevivência política | bases, serviços públicos, economia, ausência de crises |
-
-### Dicas
-- Não dá para agradar todos: escolha **quem** vai te sustentar.
-- Repressão dá estabilidade rápida e ódio duradouro.
-- Imprensa e juventude são os primeiros a virar contra você.
-- Militares são o árbitro final — soldo, nacionalismo e "lei e ordem" os mantêm do seu lado.
-- Tesouro no vermelho = inflação = ruas = queda.
-- Ditador não precisa de eleições, **mas** precisa vigiar quem o vigia.
+1. **Nova campanha** → clique no país que você quer governar → escolha dificuldade e origem do líder.
+2. Aperte **Avançar mês**. A economia, as facções, os eventos e o mundo andam juntos.
+3. Abra **Militar**, recrute tropas e selecione um exército; clique numa província vizinha para marchar.
+4. Em **Nações**, escolha um país para declarar guerra, propor aliança ou espionar.
+5. Em **Política** e **Poder**, suba na hierarquia, mude leis e, se quiser, dê um golpe.
+6. O objetivo? Nenhum imposto: sobreviver, enriquecer, virar ditador ou pintar o mapa inteiro.
 
 ---
 
-## 🗂️ Estrutura do projeto
+## Desenvolvimento
+
+```bash
+npm install                 # dependências (Electron, Capacitor, jsdom)
+npm run serve               # jogo no navegador (http://localhost:4173)
+
+npm test                    # 313 testes do motor político
+npm run test:map            # 33 testes de mapa, campanha e ícones
+npm run test:ui             # 48 testes de interface (jsdom)
+npm run test:all            # tudo
+
+npm run build:map           # regenera www/src/data/worldmap.json
+npm run build:icons         # regenera www/src/ui/icons.js a partir do Lucide
+```
+
+### Estrutura
 
 ```
-www/                     # o jogo (ESM puro, sem bundler, sem dependências)
-  index.html             # entrada + PWA
-  manifest.webmanifest   # instalação como app
-  sw.js                  # cache offline
+www/
+  index.html                ponto de entrada (tela cheia, paisagem)
   src/
-    engine/              # regras: estado, simulação, política, mundo
-      state.js           # atributos, facções, saves, aplicador de efeitos
-      simulation.js      # tick mensal, economia, sociedade, eventos, fim de jogo
-      politics.js        # carreira, eleições, golpes, purgas, leis, ações
-      world.js           # diplomacia, espionagem, guerra
-    data/                # conteúdo: leis, ações, eventos, países, origens
-    ui/                  # interface: app, telas, modais, componentes
-electron/                # casca desktop (.exe/.dmg/.AppImage) — CommonJS (main.cjs)
-build/                   # ícones pré-gerados (web, Android, iOS) + arte original
-scripts/                 # servidor local (serve.cjs), testes (test.cjs, ui-test.mjs), ícones
-.github/workflows/       # CI: .exe/.dmg/.AppImage, .apk, .ipa e GitHub Pages
+    ui/
+      app.js                controlador: menu, seleção de país, jogo, comandos
+      map.js                renderizador SVG do mapa (pan, zoom, seleção, marcadores)
+      panels.js             painéis de forças armadas, nações e inspetor de província
+      icons.js              ícones SVG gerados (Lucide) — sem emojis
+      style.css             layout de tela cheia
+      screens/*.js          governo, leis, ações, política, poder, economia, crônica, legado
+      modals.js             eventos, eleições, partido, golpe, purga, decretos
+    engine/
+      worldmap.js           carregamento e indexação do mapa
+      nations.js            nações, donos de província, exércitos, batalhas
+      ai.js                 IA do mundo (economia, diplomacia, guerra, movimento)
+      campaign.js           ponte mapa ⇄ Estado político, turno, ações, save/load
+      state.js              Estado do país (stats, facções, ideologia, carreira)
+      simulation.js         tick mensal
+      politics.js           partido, eleições, golpes, purgas, leis, ações
+    data/                   leis, ações, eventos, origens, mapa do mundo
+scripts/                    geradores (mapa, ícones) + testes + servidor
+electron/ · capacitor.config.json   empacotamento desktop e mobile
 ```
 
-**Zero dependências no jogo.** HTML, CSS e JavaScript puro com módulos ES — fácil de modificar e impossível de "quebrar por atualização de biblioteca".
+### Builds
+
+Os binários saem dos workflows do GitHub Actions:
+
+- `.github/workflows/build-desktop.yml` → Windows, macOS e Linux (electron-builder)
+- `.github/workflows/build-android.yml` → APK (Capacitor)
+- `.github/workflows/build-ios.yml` → IPA sem assinatura
+- `.github/workflows/deploy-web.yml` → publicação estática
+
+Tags `v*` disparam a criação de uma release com todos os arquivos anexados.
 
 ---
 
-## 🧪 Testes
+## Avisos
 
-```bash
-npm test
-```
+- Os binários **não são assinados**: o Windows mostra SmartScreen (Mais informações → Executar assim mesmo),
+  o macOS exige clique direito → Abrir, e o Android pede permissão para instalar de fonte desconhecida.
+- O `.ipa` precisa ser assinado com seu próprio certificado/Apple ID para instalar em um iPhone.
+- NationZero é ficção política/sátira. Golpes, censura e guerras aqui são mecânicas de jogo, não recomendações.
 
-Valida a integridade de todos os dados (IDs únicos, escolhas de evento), limites de todos os atributos
-após centenas de meses simulados, carreira e eleições, golpes, leis, diplomacia, guerra, save/load e desempenho.
+## Licença
 
----
-
-## 🔧 Personalizar
-
-- **Leis** → `www/src/data/laws.js` (copie um bloco e mude `id`, `name`, `desc`, `enact`, `tick`).
-- **Ações** → `www/src/data/actions.js`.
-- **Eventos** → `www/src/data/events.js`.
-- **Países** → `www/src/data/world.js`.
-- **Balanceamento** → `www/src/engine/simulation.js` (tudo é número; mexa com moderação).
-
----
-
-## 📜 Licença
-
-MIT — use, modifique, publique. Só não me culpe se você virar ditador.
-
-Feito com 🏛️ por [Veexdevs](https://github.com/Veexdevs).
+MIT © Veexdevs

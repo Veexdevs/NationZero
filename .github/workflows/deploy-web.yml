@@ -28,7 +28,7 @@ jobs:
           node-version: 20
 
       - name: Testes
-        run: node scripts/test.cjs
+        run: node scripts/test.cjs && node scripts/test-map.mjs
 
       - uses: actions/configure-pages@v5
 

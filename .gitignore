@@ -32,3 +32,6 @@ Thumbs.db
 *.bak
 .env
 .env.*
+
+# Link simbólico de dependências (ambiente de desenvolvimento)
+node_modules

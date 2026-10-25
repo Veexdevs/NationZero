@@ -4,6 +4,7 @@ import { dateLabel, ROLES, REGIMES, isRuler, isAuthoritarian, playerSeats, total
 import { forecast } from '../../engine/simulation.js';
 import { esc, money, barColor, num } from '../dom.js';
 import { statCard, factionRows, parliamentBar, emptyState, seatsLabel, meter, rolePill, regimePill } from '../parts.js';
+import { iconOf } from '../icons.js';
 
 const OVERVIEW_STATS = ['economia', 'aprovacao', 'estabilidade', 'agitacao', 'liberdades', 'corrupcao', 'inflacao', 'desemprego', 'saude', 'educacao', 'infraestrutura', 'reputacao'];
 
@@ -20,19 +21,19 @@ export function renderOverview(app) {
   const nextEl = Math.max(0, (st.elections.nextTurn || 48) - st.turn);
 
   const crisis = [];
-  if (st.stats.inflacao > 20) crisis.push(`🔥 Inflação em ${st.stats.inflacao.toFixed(0)}%`);
-  if (st.stats.desemprego > 18) crisis.push(`🧾 Desemprego em ${st.stats.desemprego.toFixed(0)}%`);
-  if (st.stats.agitacao > 60) crisis.push('📢 Ruas em ebulição');
-  if (st.stats.tesouro < 0) crisis.push('💳 Caixa no vermelho');
-  if (st.stats.divida > 130) crisis.push('📉 Dívida insustentável');
-  if (st.stats.sancoes > 25) crisis.push('🚫 Sanções internacionais');
-  if (st.wars.length) crisis.push('⚔️ Guerra em curso');
-  if (st.stats.repressao > 55) crisis.push('⛓️ Repressão em nível crítico');
+  if (st.stats.inflacao > 20) crisis.push(`${iconOf('flame', 15)} Inflação em ${st.stats.inflacao.toFixed(0)}%`);
+  if (st.stats.desemprego > 18) crisis.push(`${iconOf('receipt', 15)} Desemprego em ${st.stats.desemprego.toFixed(0)}%`);
+  if (st.stats.agitacao > 60) crisis.push('megaphone Ruas em ebulição');
+  if (st.stats.tesouro < 0) crisis.push('credit-card Caixa no vermelho');
+  if (st.stats.divida > 130) crisis.push('trending-down Dívida insustentável');
+  if (st.stats.sancoes > 25) crisis.push('ban Sanções internacionais');
+  if (st.wars.length) crisis.push('swords Guerra em curso');
+  if (st.stats.repressao > 55) crisis.push('link Repressão em nível crítico');
 
   return `
     <div class="screen-head">
       <div>
-        <h2 class="screen-title">${esc(st.meta.flag || '🏛️')} ${esc(st.meta.nationName)}</h2>
+        <h2 class="screen-title">${iconOf(st.meta.flag || 'landmark', 20)} ${esc(st.meta.nationName)}</h2>
         <p class="screen-sub">${esc(st.meta.motto || '')} · Capital: ${esc(st.meta.capital)} · ${esc(dateLabel(st))}</p>
       </div>
       <div class="flex gap-8 wrap">
@@ -44,7 +45,7 @@ export function renderOverview(app) {
 
     ${crisis.length ? `
       <div class="card" style="border-color:rgba(255,93,108,.35);background:rgba(255,93,108,.06);margin-bottom:14px">
-        <div class="card-title" style="margin-bottom:8px">🚨 Situações críticas</div>
+        <div class="card-title" style="margin-bottom:8px">iconOf('siren', 15) Situações críticas</div>
         <div class="chips">${crisis.map((c) => `<span class="chip" style="color:#ffb0b8;border-color:rgba(255,93,108,.3)">${esc(c)}</span>`).join('')}</div>
       </div>` : ''}
 
@@ -55,7 +56,7 @@ export function renderOverview(app) {
 
     <div class="grid cols-2 mt-20">
       <div class="card">
-        <div class="card-title">📊 Orçamento mensal <span class="sub">${balance >= 0 ? 'superávit' : 'déficit'}</span></div>
+        <div class="card-title">${iconOf('bar-chart', 15)} Orçamento mensal <span class="sub">${balance >= 0 ? 'superávit' : 'déficit'}</span></div>
         <div class="flex between center" style="margin-bottom:12px">
           <div>
             <div class="tiny muted">SALDO</div>
@@ -69,17 +70,17 @@ export function renderOverview(app) {
         ${meter('Arrecadação', Math.min(100, revenue), { color: '#19e08a' })}
         ${meter('Gastos', Math.min(100, spending), { color: '#ffab4a' })}
         ${meter('Dívida pública', Math.min(100, st.stats.divida / 2), { color: barColor(100 - st.stats.divida / 2) })}
-        <button class="btn small mt-14" data-cmd="nav:economy">⚙️ Ajustar impostos e gastos</button>
+        <button class="btn small mt-14" data-cmd="nav:economy">${iconOf('cog', 15)} Ajustar impostos e gastos</button>
       </div>
 
       <div class="card">
-        <div class="card-title">🗳️ Situação política</div>
+        <div class="card-title">${iconOf('vote', 15)} Situação política</div>
         <div class="row" style="margin-bottom:8px">
-          <span class="ico">${role.icon}</span>
+          <span class="ico">${iconOf(role.icon, 15)}</span>
           <div class="body"><div class="name">${esc(role.label)}</div><div class="desc">${esc(role.desc)}</div></div>
         </div>
         <div class="row" style="margin-bottom:8px">
-          <span class="ico">${regime.icon}</span>
+          <span class="ico">${iconOf(regime.icon, 15)}</span>
           <div class="body"><div class="name">${esc(regime.label)}</div><div class="desc">${esc(regime.desc)}</div></div>
         </div>
         <div class="flex between small mt-14">
@@ -94,19 +95,19 @@ export function renderOverview(app) {
           <span class="muted">Chance de golpe contra você</span>
           <span class="mono" style="color:${fc.coupChance > 45 ? 'var(--danger)' : fc.coupChance > 25 ? 'var(--warn)' : 'var(--good)'}">${fc.coupChance.toFixed(0)}%</span>
         </div>
-        <button class="btn small mt-14" data-cmd="nav:politics">🗳️ Ver parlamento e eleições</button>
+        <button class="btn small mt-14" data-cmd="nav:politics">${iconOf('vote', 15)} Ver parlamento e eleições</button>
       </div>
     </div>
 
     <div class="grid cols-2 mt-14">
       <div class="card">
-        <div class="card-title">🤝 Bases de apoio <span class="sub">média ${Math.round(avgFac)}</span></div>
+        <div class="card-title">${iconOf('handshake', 15)} Bases de apoio <span class="sub">média ${Math.round(avgFac)}</span></div>
         ${factionRows(st)}
       </div>
 
       <div class="card">
-        <div class="card-title">🏛️ Congresso <span class="sub">${st.flags.congresso_fechado ? 'fechado' : 'em funcionamento'}</span></div>
-        ${st.flags.congresso_fechado ? emptyState('🔒', 'O Congresso está fechado. Você governa por decreto.') : parliamentBar(st)}
+        <div class="card-title">${iconOf('landmark', 15)} Congresso <span class="sub">${st.flags.congresso_fechado ? 'fechado' : 'em funcionamento'}</span></div>
+        ${st.flags.congresso_fechado ? emptyState('lock', 'O Congresso está fechado. Você governa por decreto.') : parliamentBar(st)}
         <div class="mt-14 flex gap-8 wrap">
           <button class="btn small" data-cmd="nav:politics">Ver política</button>
           <button class="btn small" data-cmd="nav:laws">Aprovar leis</button>
@@ -119,9 +120,9 @@ export function renderOverview(app) {
       ${st.log.length ? st.log.slice(0, 6).map((l) => `
         <div class="log-entry ${esc(l.tone || 'info')}">
           <div class="log-date">${esc(l.date)}</div>
-          <div class="log-ico">${esc(l.icon || '•')}</div>
+          <div class="log-ico">${iconOf(l.icon || 'circle-dot', 14)}</div>
           <div class="log-text">${esc(l.text)}</div>
-        </div>`).join('') : emptyState('📖', 'Nada aconteceu ainda. Avance um mês.')}
+        </div>`).join('') : emptyState('book-open', 'Nada aconteceu ainda. Avance um mês.')}
     </div>
   `;
 }

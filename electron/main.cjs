@@ -9,11 +9,12 @@ let mainWindow = null;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 860,
-    minWidth: 380,
-    minHeight: 560,
-    backgroundColor: '#060b0a',
+    width: 1440,
+    height: 900,
+    minWidth: 780,
+    minHeight: 480,
+    fullscreenable: true,
+    backgroundColor: '#05080a',
     title: 'NationZero',
     icon: path.join(__dirname, '..', 'build', 'icon.png'),
     autoHideMenuBar: true,
@@ -50,7 +51,7 @@ function buildMenu() {
         {
           label: 'Novo jogo',
           accelerator: 'CmdOrCtrl+N',
-          click: () => mainWindow && mainWindow.webContents.executeJavaScript('window.NZ && (window.NZ.state=null, window.NZ.screen="menu", window.NZ.render())'),
+          click: () => mainWindow && mainWindow.webContents.executeJavaScript('window.NZ && (window.NZ.camp=null, window.NZ.state=null, window.NZ.screen="menu", window.NZ.built=false, window.NZ.render())'),
         },
         { type: 'separator' },
         { label: 'Sair', role: 'quit' },
@@ -62,6 +63,11 @@ function buildMenu() {
       submenu: [
         { role: 'reload' },
         { role: 'togglefullscreen' },
+        {
+          label: 'Modo tela cheia (paisagem)',
+          accelerator: 'F11',
+          click: () => mainWindow && mainWindow.setFullScreen(true),
+        },
         { type: 'separator' },
         { role: 'zoomIn' },
         { role: 'zoomOut' },

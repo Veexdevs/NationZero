@@ -6,6 +6,7 @@ import { esc } from '../dom.js';
 import { lawEffects, emptyState } from '../parts.js';
 import { registerCommands } from '../registry.js';
 import { toast, sfx } from '../dom.js';
+import { iconOf } from '../icons.js';
 
 const TIER_LABEL = { 1: 'Comum', 2: 'Avançada', 3: 'Radical' };
 
@@ -27,17 +28,17 @@ export function renderLaws(app) {
   return `
     <div class="screen-head">
       <div>
-        <h2 class="screen-title">📜 Leis & decretos</h2>
+        <h2 class="screen-title">${iconOf('scroll-text', 15)} Leis & decretos</h2>
         <p class="screen-sub">Transforme o país por escrito. Cada lei muda a economia, o humor das ruas e o seu próprio poder.</p>
       </div>
       <div class="flex gap-8">
-        <span class="pill good">✅ ${active.length} em vigor</span>
+        <span class="pill good">${iconOf('check', 15)} ${active.length} em vigor</span>
       </div>
     </div>
 
     <div class="subtabs">
       ${Object.entries(LAW_CATEGORIES).map(([k, c]) => `
-        <button class="chip ${cat === k ? 'active' : ''}" data-cmd="laws:cat:${k}">${c.icon} ${esc(c.label)}</button>`).join('')}
+        <button class="chip ${cat === k ? 'active' : ''}" data-cmd="laws:cat:${k}">${iconOf(c.icon, 15)} ${esc(c.label)}</button>`).join('')}
     </div>
 
     <div class="flex gap-8 wrap" style="margin-bottom:14px">
@@ -49,7 +50,7 @@ export function renderLaws(app) {
     ${filtered.length ? `
       <div class="grid cols-2">
         ${filtered.map((law) => renderLawCard(st, law)).join('')}
-      </div>` : emptyState('🗂️', show === 'ativas' ? 'Nenhuma lei desta categoria em vigor ainda.' : 'Nenhuma lei disponível com seus requisitos atuais.')}
+      </div>` : emptyState('folder', show === 'ativas' ? 'Nenhuma lei desta categoria em vigor ainda.' : 'Nenhuma lei disponível com seus requisitos atuais.')}
   `;
 }
 
@@ -57,14 +58,14 @@ function renderLawCard(st, law) {
   const inPower = !!st.policies[law.id];
   const req = lawRequirement(st, law);
   const costParts = [];
-  if (law.cost?.influencia) costParts.push(`🤝 ${law.cost.influencia}`);
-  if (law.cost?.poder) costParts.push(`⚡ ${law.cost.poder}`);
-  if (law.cost?.tesouro) costParts.push(`💰 N$ ${law.cost.tesouro} bi`);
+  if (law.cost?.influencia) costParts.push(`${iconOf('handshake', 15)} ${law.cost.influencia}`);
+  if (law.cost?.poder) costParts.push(`${iconOf('zap', 15)} ${law.cost.poder}`);
+  if (law.cost?.tesouro) costParts.push(`${iconOf('coins', 15)} N$ ${law.cost.tesouro} bi`);
 
   return `
     <div class="law ${inPower ? 'active' : ''}">
       <div class="law-top">
-        <span class="law-ico">${law.icon}</span>
+        <span class="law-ico">${iconOf(law.icon, 15)}</span>
         <div style="flex:1;min-width:0">
           <div class="flex between center gap-8">
             <div class="law-name">${esc(law.name)}</div>
@@ -96,7 +97,7 @@ registerCommands({
     if (action === 'show') { app.ui.lawShow = arg; app.render(); }
     if (action === 'enact') {
       const res = enactLaw(st, arg);
-      if (!res.ok) { toast(res.reason, 'warn', '⚠️'); sfx('bad'); return; }
+      if (!res.ok) { toast(res.reason, 'warn', 'triangle-alert'); sfx('bad'); return; }
       sfx('good');
       toast(`Lei aprovada: ${res.law.name}`, 'good', res.law.icon);
       app.save();
@@ -104,9 +105,9 @@ registerCommands({
     }
     if (action === 'revoke') {
       const res = repealLaw(st, arg);
-      if (!res.ok) { toast(res.reason, 'warn', '⚠️'); return; }
+      if (!res.ok) { toast(res.reason, 'warn', 'triangle-alert'); return; }
       const law = LAW_BY_ID[arg];
-      toast(`Lei revogada: ${law.name}`, 'warn', '↩️');
+      toast(`Lei revogada: ${law.name}`, 'warn', 'undo');
       app.save();
       app.render();
     }

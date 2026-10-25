@@ -1,6 +1,6 @@
 /* Service worker do NationZero — cache offline do jogo. */
 
-const CACHE = 'nationzero-v1';
+const CACHE = 'nationzero-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -17,7 +17,16 @@ const ASSETS = [
   './src/ui/screens/power.js',
   './src/ui/screens/economy.js',
   './src/ui/screens/politics.js',
-  './src/ui/screens/world.js',
+  './src/ui/icons.js',
+  './src/ui/map.js',
+  './src/ui/panels.js',
+  './src/engine/worldmap.js',
+  './src/engine/nations.js',
+  './src/engine/ai.js',
+  './src/engine/campaign.js',
+  './src/data/worldmap.json',
+  './assets/logo.png',
+  './assets/logo-mark.png',
   './src/ui/screens/chronicle.js',
   './src/ui/screens/legacy.js',
   './src/engine/state.js',

@@ -1,8 +1,8 @@
 {
   "name": "nationzero",
   "productName": "NationZero",
-  "version": "1.0.0",
-  "description": "Simulador de poder: crie seu país, suba ao poder, escreva leis, dê golpes e decida o destino da nação.",
+  "version": "2.0.0",
+  "description": "Grand strategy de mapa-múndi: assuma um país, governe, dê golpes e conquiste o mundo província por província.",
   "author": {
     "name": "Veexdevs",
     "email": "veexdevs@users.noreply.github.com"
@@ -16,6 +16,11 @@
     "dev": "electron . --dev",
     "serve": "node scripts/serve.cjs",
     "test": "node scripts/test.cjs",
+    "test:map": "node scripts/test-map.mjs",
+    "test:ui": "node scripts/ui-test.mjs",
+    "test:all": "npm test && npm run test:map && npm run test:ui",
+    "build:map": "node scripts/build-map.cjs",
+    "build:icons": "node scripts/build-icons.cjs",
     "icons": "bash scripts/make-icons.sh",
     "cap:add:android": "npx cap add android",
     "cap:add:ios": "npx cap add ios",
@@ -25,15 +30,21 @@
     "dist:linux": "electron-builder --linux AppImage deb",
     "dist:win": "electron-builder --win nsis portable",
     "dist:mac": "electron-builder --mac dmg zip",
-    "dist:all": "electron-builder -mwl",
-    "test:ui": "node scripts/ui-test.mjs",
-    "test:all": "npm test && npm run test:ui"
+    "dist:all": "electron-builder -mwl"
   },
   "devDependencies": {
     "electron": "^31.3.1",
     "electron-builder": "^24.13.3",
     "@capacitor/cli": "^6.1.2",
-    "jsdom": "^24.1.3"
+    "jsdom": "^24.1.3",
+    "lucide-static": "^0.454.0",
+    "world-atlas": "^2.0.2",
+    "topojson-client": "^3.1.0",
+    "d3-geo": "^3.1.1",
+    "polygon-clipping": "^0.15.7",
+    "world-countries": "^5.0.0",
+    "country-json": "^1.1.0",
+    "@turf/area": "^7.1.0"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.2",

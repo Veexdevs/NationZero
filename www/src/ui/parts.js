@@ -2,6 +2,7 @@
 
 import { STATS, FACTIONS, AXES, ROLES, REGIMES, statLabel, factionAverage, playerSeats, totalSeats, isAuthoritarian } from '../engine/state.js';
 import { esc, barColor, hexAlpha, money, pct, num } from './dom.js';
+import { iconOf } from './icons.js';
 
 export function statCard(key, value, delta, extra = '') {
   const def = STATS[key];
@@ -16,7 +17,7 @@ export function statCard(key, value, delta, extra = '') {
   const dTxt = Math.abs(d) < 0.05 ? '' : `${d > 0 ? '+' : ''}${d.toFixed(Math.abs(d) < 10 ? 1 : 0)}`;
   return `
     <div class="stat">
-      <div class="lbl">${def.icon} ${esc(def.label)}</div>
+      <div class="lbl">${iconOf(def.icon, 15)} ${esc(def.label)}</div>
       <div class="val">${esc(statLabel(key, value))} ${extra}</div>
       <div class="bar"><i style="width:${(ratio * 100).toFixed(1)}%;background:${color}"></i></div>
       ${dTxt ? `<div class="delta ${dCls}">${dTxt}</div>` : ''}
@@ -29,7 +30,7 @@ export function factionRows(state, keys = Object.keys(FACTIONS)) {
     const v = state.factions[k] ?? 50;
     return `
       <div class="faction-row" title="${esc(f.desc)}">
-        <span class="fi">${f.icon}</span>
+        <span class="fi">${iconOf(f.icon, 15)}</span>
         <span class="fn">${esc(f.label)}</span>
         <span class="ft"><i style="width:${v}%;background:${barColor(v)}"></i></span>
         <span class="fv">${Math.round(v)}</span>
@@ -63,12 +64,12 @@ export function ideologyBars(state, editable = false) {
 
 export function rolePill(state) {
   const r = ROLES[state.role] || ROLES.cidadao;
-  return `<span class="pill role">${r.icon} ${esc(r.label)}</span>`;
+  return `<span class="pill role">${iconOf(r.icon, 15)} ${esc(r.label)}</span>`;
 }
 
 export function regimePill(state) {
   const r = REGIMES[state.regime] || REGIMES.democracia;
-  return `<span class="pill ${isAuthoritarian(state) ? 'warn' : 'info'}">${r.icon} ${esc(r.label)}</span>`;
+  return `<span class="pill ${isAuthoritarian(state) ? 'warn' : 'info'}">${iconOf(r.icon, 15)} ${esc(r.label)}</span>`;
 }
 
 export function parliamentBar(state) {
@@ -119,23 +120,23 @@ export function emptyState(icon, text) {
 
 export function budgetChips(state) {
   return `
-    <span class="pill ${state.stats.tesouro >= 0 ? 'good' : 'bad'}">💰 ${money(state.stats.tesouro)}</span>
-    <span class="pill ${state.stats.aprovacao >= 50 ? 'good' : state.stats.aprovacao >= 30 ? 'warn' : 'bad'}">👍 ${Math.round(state.stats.aprovacao)}%</span>
-    <span class="pill power">⚡ ${Math.round(state.stats.poder)}</span>
-    <span class="pill info">🤝 ${Math.round(state.stats.influencia)}</span>`;
+    <span class="pill ${state.stats.tesouro >= 0 ? 'good' : 'bad'}">${iconOf('coins', 15)} ${money(state.stats.tesouro)}</span>
+    <span class="pill ${state.stats.aprovacao >= 50 ? 'good' : state.stats.aprovacao >= 30 ? 'warn' : 'bad'}">${iconOf('thumbs-up', 15)} ${Math.round(state.stats.aprovacao)}%</span>
+    <span class="pill power">${iconOf('zap', 15)} ${Math.round(state.stats.poder)}</span>
+    <span class="pill info">${iconOf('handshake', 15)} ${Math.round(state.stats.influencia)}</span>`;
 }
 
 export function factionAvgLabel(state) {
   const avg = factionAverage(state);
   const tone = avg >= 60 ? 'good' : avg >= 45 ? 'info' : avg >= 30 ? 'warn' : 'bad';
-  return `<span class="pill ${tone}">🏛️ Bases ${Math.round(avg)}</span>`;
+  return `<span class="pill ${tone}">${iconOf('landmark', 15)} Bases ${Math.round(avg)}</span>`;
 }
 
 export function seatsLabel(state) {
   const seats = playerSeats(state);
   const total = totalSeats(state);
   const tone = seats > total / 2 ? 'good' : seats > 0 ? 'info' : 'warn';
-  return `<span class="pill ${tone}">🏛️ ${seats}/${total} cadeiras</span>`;
+  return `<span class="pill ${tone}">${iconOf('landmark', 15)} ${seats}/${total} cadeiras</span>`;
 }
 
 export { hexAlpha };

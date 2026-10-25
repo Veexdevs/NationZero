@@ -1,5 +1,8 @@
 /* Utilidades de UI: HTML seguro, modais, toasts e som. */
 
+import { iconOf } from './icons.js';
+
+
 export const $ = (sel, root = document) => root.querySelector(sel);
 export const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
@@ -55,12 +58,12 @@ export function hexAlpha(hex, alpha) {
 
 /* -------------------------------- Toasts -------------------------------- */
 
-export function toast(message, tone = 'info', icon = '•', duration = 3200) {
+export function toast(message, tone = 'info', icon = 'info', duration = 3200) {
   const root = document.getElementById('toast-root');
   if (!root) return;
   const el = document.createElement('div');
   el.className = `toast ${tone}`;
-  el.innerHTML = `<span style="font-size:16px">${esc(icon)}</span><span>${esc(message)}</span>`;
+  el.innerHTML = `<span style="display:flex;color:var(--accent)">${iconOf(icon, 16)}</span><span>${esc(message)}</span>`;
   root.appendChild(el);
   setTimeout(() => {
     el.classList.add('out');
@@ -139,7 +142,7 @@ export function confirmDialog({ title, text, confirmLabel = 'Confirmar', cancelL
   return new Promise((resolve) => {
     openModal(`
       <div class="modal-head">
-        <div class="modal-ico">${danger ? '⚠️' : '❓'}</div>
+        <div class="modal-ico">${iconOf(danger ? 'triangle-alert' : 'circle-help', 20)}</div>
         <div><div class="modal-title">${esc(title)}</div></div>
       </div>
       <div class="modal-text">${esc(text)}</div>
